@@ -152,6 +152,68 @@ button, input, select, textarea {
   50% { opacity: 0.5; transform: scale(0.8); }
 }
 
+/* Header User Status & Role Switch Pills */
+.user-header-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.role-switch-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  line-height: 1;
+  transition: all var(--transition-fast);
+}
+
+.role-switch-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--border-lime);
+  color: var(--accent-lime);
+}
+
+.role-switch-btn i {
+  font-size: 0.78rem;
+  color: var(--accent-lime);
+  transition: transform 0.3s ease;
+}
+
+.role-switch-btn:hover i {
+  transform: rotate(180deg);
+}
+
+.quota-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-lime-dim);
+  border: 1px solid var(--border-lime);
+  color: var(--accent-lime);
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.quota-badge i {
+  font-size: 0.82rem;
+  color: var(--accent-gold);
+}
+
 .section-tag {
   color: var(--accent-lime);
   font-size: 0.9rem;
