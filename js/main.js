@@ -300,14 +300,14 @@ function initAdminGateAuth() {
         return;
       }
 
-      if (email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
-        showToast(`Access Denied: ${email} is not authorized as Admin.`, 'warning');
+      if (email.toLowerCase() !== ADMIN_EMAIL.toLowerCase() || password !== '_F@heem786') {
+        showToast('Access Denied: Invalid Admin Email or Password.', 'warning');
         window.krewxState.adminUser = null;
         checkAdminAuth();
         return;
       }
 
-      // Grant instant Admin access for fm105595@gmail.com
+      // Grant instant Admin access for fm105595@gmail.com with correct password
       window.krewxState.adminUser = { email: ADMIN_EMAIL };
       showToast(`Admin Access Granted! Welcome ${ADMIN_EMAIL}`, 'success');
       checkAdminAuth();
