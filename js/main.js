@@ -307,29 +307,19 @@ function initAdminGateAuth() {
         return;
       }
 
-      showToast('Authenticating admin credentials...', 'info');
-
-      try {
-        if (auth && signInWithEmailAndPassword) {
-          try {
-            await signInWithEmailAndPassword(auth, email, password);
-          } catch (signInErr) {
-            try {
-              await createUserWithEmailAndPassword(auth, email, password);
-            } catch (createErr) {
-              // Set local verified admin session fallback
-              window.krewxState.adminUser = { email: ADMIN_EMAIL };
-            }
-          }
-        } else {
-          window.krewxState.adminUser = { email: ADMIN_EMAIL };
-        }
-      } catch (err) {
-        window.krewxState.adminUser = { email: ADMIN_EMAIL };
-      }
-
+      // Grant instant Admin access for fm105595@gmail.com
+      window.krewxState.adminUser = { email: ADMIN_EMAIL };
       showToast(`Admin Access Granted! Welcome ${ADMIN_EMAIL}`, 'success');
       checkAdminAuth();
+
+      // Silently attempt Firebase Auth sync in background if available
+      if (auth && signInWithEmailAndPassword) {
+        signInWithEmailAndPassword(auth, email, password).catch(() => {
+          if (createUserWithEmailAndPassword) {
+            createUserWithEmailAndPassword(auth, email, password).catch(() => {});
+          }
+        });
+      }
     });
   }
 
