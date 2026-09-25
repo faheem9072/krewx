@@ -1,7 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
 /* ==========================================================================
-   Krewx Corporate Website - Design System & Modern Styles
-   Tagline: "Your Crew, On Demand"
-   Palette: Dark Charcoal (#090B0E), Elevated Card (#161B24), Lime Green Accent (#8CF522)
+   Krewx Platform - Grounded & Distinctive Workforce Design System
+   Palette: Obsidian Dark (#07090E), Deep Blue Card (#171E2C), Emerald Accent (#10B981)
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -9,33 +10,36 @@
    -------------------------------------------------------------------------- */
 :root {
   /* Colors */
-  --bg-dark: #07090c;
-  --bg-primary: #0a0d12;
-  --bg-secondary: #12161f;
-  --bg-card: #171c26;
-  --bg-card-hover: #1e2432;
-  --bg-glass: rgba(18, 22, 31, 0.75);
+  --bg-dark: #07090e;
+  --bg-primary: #0b0e14;
+  --bg-secondary: #121722;
+  --bg-card: #171e2c;
+  --bg-card-hover: #1e283a;
+  --bg-glass: rgba(18, 24, 35, 0.82);
   
-  --border-subtle: rgba(255, 255, 255, 0.07);
-  --border-medium: rgba(255, 255, 255, 0.14);
-  --border-lime: rgba(140, 245, 34, 0.35);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.16);
+  --border-lime: rgba(16, 185, 129, 0.35);
   
-  /* Brand Accent */
-  --accent-lime: #8cf522;
-  --accent-lime-hover: #9ef01a;
-  --accent-lime-dark: #70cc10;
-  --accent-lime-dim: rgba(140, 245, 34, 0.1);
-  --accent-lime-glow: rgba(140, 245, 34, 0.22);
+  /* Brand Accent - Crisp Emerald & Warm Gold */
+  --accent-lime: #10b981;
+  --accent-lime-hover: #059669;
+  --accent-lime-dark: #047857;
+  --accent-lime-dim: rgba(16, 185, 129, 0.12);
+  --accent-lime-glow: rgba(16, 185, 129, 0.22);
+  
+  --accent-gold: #f59e0b;
+  --accent-gold-dim: rgba(245, 158, 11, 0.12);
   
   /* Typography Colors */
-  --text-primary: #ffffff;
+  --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
   --text-inverse: #07090c;
   
-  /* Typography Fonts */
+  /* Distinctive Typography Pair */
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-display: 'Syne', 'Plus Jakarta Sans', sans-serif;
   
   /* Layout & Spacing */
   --container-max: 1240px;
@@ -48,7 +52,7 @@
   /* Shadows & Glows */
   --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
   --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.4);
-  --shadow-lime: 0 8px 30px rgba(140, 245, 34, 0.25);
+  --shadow-lime: 0 8px 25px rgba(16, 185, 129, 0.25);
   
   /* Transitions */
   --transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -141,16 +145,21 @@ button, input, select, textarea {
 
 .section-tag {
   color: var(--accent-lime);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   margin-bottom: 12px;
-  display: block;
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-lime-dim);
+  border: 1px solid var(--border-lime);
 }
 
 .section-title {
-  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.8vw, 3rem);
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1.15;
@@ -467,7 +476,8 @@ button, input, select, textarea {
 }
 
 .hero-title {
-  font-size: clamp(2.8rem, 5vw, 4.2rem);
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 4.8vw, 4rem);
   font-weight: 800;
   line-height: 1.08;
   letter-spacing: -0.03em;

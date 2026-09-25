@@ -61,10 +61,10 @@
         <!-- User Quota & Role Badge -->
         <div class="user-header-status">
           <button class="role-switch-btn" id="roleSwitchBtn" title="Click to switch between Job Seeker and Employer role">
-            <span id="roleLabel">Role: Job Seeker</span> 🔄
+            <span id="roleLabel">Role: Job Seeker</span> <i class="fa-solid fa-arrows-rotate" style="margin-left: 4px; font-size: 0.78rem;"></i>
           </button>
           <span class="quota-badge" id="userQuotaBadge">
-            ⚡ <span id="quotaCountText">5 Free Unlocks Left</span>
+            <i class="fa-solid fa-key" style="color: var(--accent-gold); margin-right: 4px; font-size: 0.8rem;"></i> <span id="quotaCountText">5 Free Unlocks Left</span>
           </span>
         </div>
 
@@ -72,7 +72,7 @@
           <span>Auth & Role</span>
         </button>
         <button class="btn btn-primary btn-sm" data-modal-target="bookingModal">
-          <span>Post a Job &rarr;</span>
+          <span>Post a Shift Job</span>
         </button>
       </nav>
 
@@ -94,22 +94,21 @@
       <div class="hero-content fade-up">
         <div class="badge">
           <span class="badge-dot"></span>
-          <span>On-Demand Workforce Platform</span>
+          <span>On-Demand Workforce Network • Kerala</span>
         </div>
 
         <h1 class="hero-title">
-          Reliable Crews. <br>
-          <span class="highlight">On Demand.</span>
+          On-Demand Crews <br>
+          <span class="highlight">for Kerala Businesses</span>
         </h1>
 
         <p class="hero-subtitle">
-          Connect with dependable people for the work that keeps your business moving — or join our active crew network
-          for flexible shift opportunities.
+          Directly connect with vetted manpower for housekeeping, catering, warehouse operations, retail staffing, and drivers across Ernakulam, Kozhikode, Thrissur & Kochi.
         </p>
 
         <div class="hero-ctas">
           <button class="btn btn-primary btn-lg" data-modal-target="bookingModal">
-            <span>Book a Crew</span>
+            <span>Post a Shift Job</span>
             <svg class="arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
               stroke-width="2.5">
               <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -118,26 +117,27 @@
           </button>
 
           <button class="btn btn-secondary btn-lg" data-modal-target="workerModal">
-            <span>Find Work & Join Crew</span>
+            <span>Find Work & Apply</span>
           </button>
         </div>
 
         <div class="hero-trust-bar">
           <div class="trust-item">
-            <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-            </svg>
-            <span class="trust-text">Verified Support Personnel</span>
+            <i class="fa-solid fa-user-check trust-icon"></i>
+            <span class="trust-text">Verified Personnel</span>
           </div>
 
           <div class="trust-item">
-            <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <circle cx="12" cy="12" r="10"></circle>
-              <polyline points="12 6 12 12 16 14"></polyline>
-            </svg>
-            <span class="trust-text">Rapid Dispatch & Response</span>
+            <i class="fa-solid fa-bolt trust-icon"></i>
+            <span class="trust-text">Fast Local Dispatch</span>
+          </div>
+
+          <div class="trust-item">
+            <i class="fa-solid fa-phone-volume trust-icon"></i>
+            <span class="trust-text">Direct Contact Reveal</span>
           </div>
         </div>
+      </div>
       </div>
 
       <div class="hero-visual fade-up" style="transition-delay: 0.15s;">
@@ -168,8 +168,8 @@
   <section class="marketplace-section" id="marketplace">
     <div class="container">
       <div class="section-header center fade-up">
-        <span class="section-tag">Live Marketplace</span>
-        <h2 class="section-title">Uber for Local Jobs & Workers</h2>
+        <span class="section-tag">Shift Marketplace</span>
+        <h2 class="section-title">Live Jobs & Verified Personnel</h2>
         <p class="section-subtitle">
           Explore active shift openings near you or dispatch verified crews for your operations.
         </p>
@@ -178,23 +178,15 @@
       <!-- Marketplace Tab Selector -->
       <div class="marketplace-tabs-wrap fade-up">
         <button class="market-tab-btn active" data-tab-target="tab-jobs">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-          </svg>
-          <span>💼 Active Job Openings</span>
-          <span class="tab-count-badge">12 Active</span>
+          <i class="fa-solid fa-briefcase"></i>
+          <span>Active Shift Jobs</span>
+          <span class="tab-count-badge">Live Openings</span>
         </button>
 
         <button class="market-tab-btn" data-tab-target="tab-crews">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-          </svg>
-          <span>⚡ Available Crews</span>
-          <span class="tab-count-badge lime">8 Crews</span>
+          <i class="fa-solid fa-users"></i>
+          <span>Available Workers</span>
+          <span class="tab-count-badge lime">Verified Crew</span>
         </button>
       </div>
 
@@ -205,13 +197,13 @@
           <div class="job-card fade-up">
             <div class="job-card-header">
               <span class="job-category-tag">Events & Catering</span>
-              <span class="badge-type temp">⚡ Temporary Shift</span>
+              <span class="badge-type temp"><i class="fa-solid fa-clock"></i> Shift Job</span>
             </div>
             <h3 class="job-card-title">Catering & Event Helper Crew</h3>
             <div class="job-meta">
-              <span>📍 Ernakulam / Kochi</span>
-              <span>⏰ 8 Hours Shift</span>
-              <span>👥 6 Openings</span>
+              <span><i class="fa-solid fa-location-dot"></i> Ernakulam / Kochi</span>
+              <span><i class="fa-solid fa-clock"></i> 8 Hours Shift</span>
+              <span><i class="fa-solid fa-users"></i> 6 Openings</span>
             </div>
             <p class="job-desc">Marriage function & banquet service support. Immediate payout & food provided.</p>
             <div class="job-card-footer">
@@ -226,13 +218,13 @@
           <div class="job-card fade-up">
             <div class="job-card-header">
               <span class="job-category-tag">Retail & Local Shops</span>
-              <span class="badge-type perm">💼 Permanent Job</span>
+              <span class="badge-type perm"><i class="fa-solid fa-user-check"></i> Full-Time</span>
             </div>
             <h3 class="job-card-title">Full-Time Store Sales Executive</h3>
             <div class="job-meta">
-              <span>📍 Kozhikode & Kochi</span>
-              <span>⏰ Monthly Full-Time</span>
-              <span>👥 4 Openings</span>
+              <span><i class="fa-solid fa-location-dot"></i> Kozhikode & Kochi</span>
+              <span><i class="fa-solid fa-calendar"></i> Monthly Full-Time</span>
+              <span><i class="fa-solid fa-users"></i> 4 Openings</span>
             </div>
             <p class="job-desc">Permanent supermarket counter associate, customer assistance & billing support.</p>
             <div class="job-card-footer">
@@ -247,13 +239,13 @@
           <div class="job-card fade-up">
             <div class="job-card-header">
               <span class="job-category-tag">Drivers & Transport</span>
-              <span class="badge-type perm">💼 Permanent Job</span>
+              <span class="badge-type perm"><i class="fa-solid fa-user-check"></i> Full-Time</span>
             </div>
             <h3 class="job-card-title">Permanent Private & Store Driver</h3>
             <div class="job-meta">
-              <span>📍 Thrissur & Ernakulam</span>
-              <span>⏰ Full-Time Monthly</span>
-              <span>👥 3 Openings</span>
+              <span><i class="fa-solid fa-location-dot"></i> Thrissur & Ernakulam</span>
+              <span><i class="fa-solid fa-calendar"></i> Full-Time Monthly</span>
+              <span><i class="fa-solid fa-users"></i> 3 Openings</span>
             </div>
             <p class="job-desc">Permanent family driver & retail delivery vehicle driver. Fixed monthly salary.</p>
             <div class="job-card-footer">
@@ -268,13 +260,13 @@
           <div class="job-card fade-up">
             <div class="job-card-header">
               <span class="job-category-tag">Warehouse & Logistics</span>
-              <span class="badge-type temp">⚡ Temporary Shift</span>
+              <span class="badge-type temp"><i class="fa-solid fa-clock"></i> Shift Job</span>
             </div>
             <h3 class="job-card-title">Goods Packing & Loading Helper</h3>
             <div class="job-meta">
-              <span>📍 Kozhikode City</span>
-              <span>⏰ Day Shift</span>
-              <span>👥 10 Openings</span>
+              <span><i class="fa-solid fa-location-dot"></i> Kozhikode City</span>
+              <span><i class="fa-solid fa-sun"></i> Day Shift</span>
+              <span><i class="fa-solid fa-users"></i> 10 Openings</span>
             </div>
             <p class="job-desc">Package sorting, inventory scanning & loading at distribution hub for 3 days.</p>
             <div class="job-card-footer">
@@ -289,13 +281,13 @@
           <div class="job-card fade-up">
             <div class="job-card-header">
               <span class="job-category-tag">Drivers & Transport</span>
-              <span class="badge-type temp">⚡ Temporary Shift</span>
+              <span class="badge-type temp"><i class="fa-solid fa-clock"></i> Shift Job</span>
             </div>
             <h3 class="job-card-title">1-Day / On-Demand Trip Driver</h3>
             <div class="job-meta">
-              <span>📍 Malappuram & Palakkad</span>
-              <span>⏰ Single Day Shift</span>
-              <span>👥 5 Openings</span>
+              <span><i class="fa-solid fa-location-dot"></i> Malappuram & Palakkad</span>
+              <span><i class="fa-solid fa-clock"></i> Single Day Shift</span>
+              <span><i class="fa-solid fa-users"></i> 5 Openings</span>
             </div>
             <p class="job-desc">On-demand trip driver for outstation travel & emergency store logistics delivery.</p>
             <div class="job-card-footer">
@@ -317,10 +309,9 @@
                 <span class="avatar-dot"></span>
                 <strong>Verified Event Support Team</strong>
               </div>
-              <span class="dispatch-tag">⚡ < 30 Min Dispatch</span>
+              <span class="dispatch-tag"><i class="fa-solid fa-bolt"></i> Immediate Availability</span>
             </div>
-            <p class="crew-card-detail">12 Active youth personnel available for catering, table setup & venue ops in
-              Ernakulam.</p>
+            <p class="crew-card-detail">12 Active youth personnel available for catering, table setup & venue ops in Ernakulam.</p>
             <div class="crew-card-action">
               <button class="btn btn-primary btn-sm btn-full" data-modal-target="bookingModal"
                 data-category="Catering & Events">
@@ -335,10 +326,9 @@
                 <span class="avatar-dot"></span>
                 <strong>Logistics & Packing Team</strong>
               </div>
-              <span class="dispatch-tag">⚡ Ready Now</span>
+              <span class="dispatch-tag"><i class="fa-solid fa-bolt"></i> Ready Now</span>
             </div>
-            <p class="crew-card-detail">8 Experienced warehouse assistants ready for loading, unloading & inventory
-              tasks.</p>
+            <p class="crew-card-detail">8 Experienced warehouse assistants ready for loading, unloading & inventory tasks.</p>
             <div class="crew-card-action">
               <button class="btn btn-primary btn-sm btn-full" data-modal-target="bookingModal"
                 data-category="Warehouse & Operations">
@@ -353,10 +343,9 @@
                 <span class="avatar-dot"></span>
                 <strong>Retail & Store Support Pool</strong>
               </div>
-              <span class="dispatch-tag">⚡ Ready Now</span>
+              <span class="dispatch-tag"><i class="fa-solid fa-bolt"></i> Ready Now</span>
             </div>
-            <p class="crew-card-detail">10 Verified retail associates for supermarket counters, store inventory & sales
-              assistance.</p>
+            <p class="crew-card-detail">10 Verified retail associates for supermarket counters, store inventory & sales assistance.</p>
             <div class="crew-card-action">
               <button class="btn btn-primary btn-sm btn-full" data-modal-target="bookingModal"
                 data-category="Retail & Shop Staff">
@@ -371,10 +360,9 @@
                 <span class="avatar-dot"></span>
                 <strong>On-Demand Driver Network</strong>
               </div>
-              <span class="dispatch-tag">⚡ Rapid On-Call</span>
+              <span class="dispatch-tag"><i class="fa-solid fa-bolt"></i> Rapid On-Call</span>
             </div>
-            <p class="crew-card-detail">6 Verified drivers with valid LMV/HMV licenses for personal trips & store
-              delivery transport.</p>
+            <p class="crew-card-detail">6 Verified drivers with valid LMV/HMV licenses for personal trips & store delivery transport.</p>
             <div class="crew-card-action">
               <button class="btn btn-primary btn-sm btn-full" data-modal-target="bookingModal"
                 data-category="Drivers & Transport">
@@ -573,28 +561,28 @@
       <div class="process-grid">
         <!-- Step 1 -->
         <div class="process-card fade-up">
-          <div class="process-num">01</div>
-          <h3 class="process-title">Tell Us What You Need</h3>
+          <span class="process-num">Step 1</span>
+          <h3 class="process-title">Define Your Shift Request</h3>
           <p class="process-desc">
-            Specify your operational requirements, crew size, schedule, location, and key skills needed.
+            Specify your required service, crew size, schedule, worksite location, and necessary skills.
           </p>
         </div>
 
         <!-- Step 2 -->
         <div class="process-card fade-up" style="transition-delay: 0.15s;">
-          <div class="process-num">02</div>
-          <h3 class="process-title">We Find the Right Crew</h3>
+          <span class="process-num">Step 2</span>
+          <h3 class="process-title">Direct Contact Reveal</h3>
           <p class="process-desc">
-            We match your request with dependable, background-vetted workers ready to report for duty.
+            Instantly connect with background-checked workers or candidates ready to report for duty.
           </p>
         </div>
 
         <!-- Step 3 -->
         <div class="process-card fade-up" style="transition-delay: 0.3s;">
-          <div class="process-num">03</div>
-          <h3 class="process-title">Get the Work Done</h3>
+          <span class="process-num">Step 3</span>
+          <h3 class="process-title">Execute Operational Shift</h3>
           <p class="process-desc">
-            Your crew arrives on site prepared and supported, ensuring your operations execute without disruption.
+            Your crew arrives on site prepared and equipped, ensuring seamless operation without administrative delays.
           </p>
         </div>
       </div>
@@ -824,7 +812,7 @@
 
       <!-- Admin Gate / Sign-In Card -->
       <div id="adminLoginGate" style="background: rgba(15, 23, 42, 0.85); border: 1px solid var(--border-medium); border-radius: var(--radius-xl); padding: 36px 28px; max-width: 480px; margin: 0 auto; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
-        <div style="font-size: 2.8rem; margin-bottom: 12px;">🔐</div>
+        <div style="font-size: 2.2rem; margin-bottom: 12px; color: var(--accent-gold);"><i class="fa-solid fa-user-shield"></i></div>
         <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 8px;">Admin Security Gate</h2>
         <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.5;">
           Sign in with authorized admin credentials (<code>fm105595@gmail.com</code>) to access the Platform Ops Command Center.
@@ -840,12 +828,12 @@
             <input type="password" class="form-control" id="adminGatePassword" placeholder="Enter password" required style="padding: 12px 14px;">
           </div>
           <button type="submit" class="btn btn-primary btn-full" id="adminGateSubmitBtn" style="margin-top: 8px; padding: 12px; font-weight: 700;">
-            🔑 Sign In to Admin Panel
+            Sign In to Admin Panel
           </button>
         </form>
 
         <div id="adminAccessDeniedMsg" style="display: none; margin-top: 18px; padding: 12px 16px; background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #f87171; border-radius: var(--radius-md); font-size: 0.88rem; font-weight: 600; text-align: center;">
-          ⚠️ Access Denied: Only <code>fm105595@gmail.com</code> is authorized to view the Admin Command Center.
+          <i class="fa-solid fa-triangle-exclamation"></i> Access Denied: Only <code>fm105595@gmail.com</code> is authorized to view the Admin Command Center.
         </div>
       </div>
 
@@ -857,8 +845,8 @@
             <h2 class="section-title" style="margin-top: 8px; font-size: 1.8rem;">Admin Command Center</h2>
           </div>
           <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-            <span class="quota-badge admin-tag" id="adminUserTag">🔐 Admin: fm105595@gmail.com</span>
-            <button class="btn btn-secondary btn-sm" id="refreshAdminStatsBtn">↻ Refresh Analytics</button>
+            <span class="quota-badge admin-tag" id="adminUserTag"><i class="fa-solid fa-user-shield"></i> Admin: fm105595@gmail.com</span>
+            <button class="btn btn-secondary btn-sm" id="refreshAdminStatsBtn"><i class="fa-solid fa-rotate-right"></i> Refresh Analytics</button>
             <button class="btn btn-secondary btn-sm" id="adminSignOutBtn" style="border-color: #ef4444; color: #f87171;">Sign Out</button>
           </div>
         </div>
@@ -893,7 +881,7 @@
 
         <!-- Worker KYC Verification & User Management Table -->
         <div style="margin-top: 32px;">
-          <h3 style="font-size: 1.2rem; margin-bottom: 16px;">👥 Worker KYC Verification & Trust Management</h3>
+          <h3 style="font-size: 1.2rem; margin-bottom: 16px;"><i class="fa-solid fa-id-card" style="margin-right: 8px; color: var(--accent-lime);"></i> Worker KYC Verification & Trust Management</h3>
           <div style="overflow-x: auto;">
             <table class="admin-table">
               <thead>
@@ -919,7 +907,7 @@
 
         <!-- Contact Unlocks & Razorpay Audit Log -->
         <div style="margin-top: 40px;">
-          <h3 style="font-size: 1.2rem; margin-bottom: 16px;">💳 Recent Contact Unlocks & Razorpay Transactions</h3>
+          <h3 style="font-size: 1.2rem; margin-bottom: 16px;"><i class="fa-solid fa-credit-card" style="margin-right: 8px; color: var(--accent-gold);"></i> Recent Contact Unlocks & Transactions</h3>
           <div style="overflow-x: auto;">
             <table class="admin-table">
               <thead>
@@ -949,7 +937,7 @@
                   <td>Anil Kumar (+91 97451...)</td>
                   <td><span class="kyc-badge unverified">Razorpay Pay</span></td>
                   <td>₹100</td>
-                  <td><span class="kyc-badge verified">PAID ✅</span></td>
+                  <td><span class="kyc-badge verified">PAID <i class="fa-solid fa-check"></i></span></td>
                   <td>10 mins ago</td>
                 </tr>
               </tbody>
@@ -1318,7 +1306,7 @@
       <!-- Firebase Email/Password Authentication Section -->
       <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-medium); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 20px;">
         <div id="firebaseAuthStatus" style="font-size: 0.85rem; margin-bottom: 10px; color: var(--text-secondary); text-align: center;">
-          🔥 Firebase Auth Status: <strong id="authStatusText">Not Signed In</strong>
+          <i class="fa-solid fa-shield-halved" style="color: var(--accent-gold); margin-right: 4px;"></i> Firebase Auth Status: <strong id="authStatusText">Not Signed In</strong>
         </div>
 
         <form id="firebaseAuthForm" style="display: flex; flex-direction: column; gap: 10px;">
@@ -1330,10 +1318,10 @@
           </div>
           <div style="display: flex; gap: 10px; margin-top: 4px;">
             <button type="button" class="btn btn-secondary btn-sm" style="flex: 1;" id="authLoginBtn">
-              🔑 Sign In
+              Sign In
             </button>
             <button type="button" class="btn btn-primary btn-sm" style="flex: 1;" id="authRegisterBtn">
-              ✨ Create Account
+              Create Account
             </button>
           </div>
         </form>
@@ -1351,7 +1339,7 @@
         <!-- Role 1: Job Seeker -->
         <div style="background: var(--bg-card); border: 2px solid var(--border-medium); border-radius: var(--radius-lg); padding: 20px; cursor: pointer; transition: all 0.2s;" id="selectRoleSeeker" onclick="window.setPlatformRole('seeker')">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="font-weight: 800; font-size: 1.1rem; color: #38bdf8;">👨‍🔧 Job Seeker / Worker</div>
+            <div style="font-weight: 800; font-size: 1.1rem; color: #38bdf8;"><i class="fa-solid fa-user" style="margin-right: 6px;"></i> Job Seeker / Worker</div>
             <span class="quota-badge">5 Free Unlocks</span>
           </div>
           <p style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 8px;">
@@ -1362,7 +1350,7 @@
         <!-- Role 2: Employer -->
         <div style="background: var(--bg-card); border: 2px solid var(--border-medium); border-radius: var(--radius-lg); padding: 20px; cursor: pointer; transition: all 0.2s;" id="selectRoleEmployer" onclick="window.setPlatformRole('employer')">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="font-weight: 800; font-size: 1.1rem; color: #f59e0b;">🏢 Business / Employer</div>
+            <div style="font-weight: 800; font-size: 1.1rem; color: #f59e0b;"><i class="fa-solid fa-building" style="margin-right: 6px;"></i> Business / Employer</div>
             <span class="quota-badge warning">2 Free Unlocks</span>
           </div>
           <p style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 8px;">
@@ -1372,7 +1360,7 @@
 
         <!-- Role 3: Admin -->
         <div style="background: var(--bg-card); border: 1px dashed rgba(168, 85, 247, 0.4); border-radius: var(--radius-lg); padding: 16px; cursor: pointer; text-align: center;" onclick="window.setPlatformRole('admin')">
-          <span style="color: #c084fc; font-weight: 700; font-size: 0.9rem;">🔐 Switch to Admin Ops Mode</span>
+          <span style="color: #c084fc; font-weight: 700; font-size: 0.9rem;"><i class="fa-solid fa-user-shield" style="margin-right: 6px;"></i> Switch to Admin Ops Mode</span>
         </div>
       </div>
     </div>
@@ -1412,21 +1400,21 @@
 
       <div class="payment-options-grid">
         <button class="pay-option-btn" onclick="window.triggerRazorpayPayment('upi')">
-          <span style="font-size: 1.4rem;">📱</span>
+          <i class="fa-solid fa-mobile-screen" style="font-size: 1.4rem; color: #38bdf8;"></i>
           <span>UPI / GPay / PhonePe</span>
         </button>
         <button class="pay-option-btn" onclick="window.triggerRazorpayPayment('card')">
-          <span style="font-size: 1.4rem;">💳</span>
+          <i class="fa-solid fa-credit-card" style="font-size: 1.4rem; color: #f59e0b;"></i>
           <span>Debit / Credit Card</span>
         </button>
       </div>
 
       <button class="btn btn-primary btn-full" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); font-size: 1rem; padding: 14px;" id="payRazorpaySubmitBtn" onclick="window.triggerRazorpayPayment('instant')">
-        <span>Pay ₹100 via Razorpay &rarr;</span>
+        <span>Pay ₹100 via Razorpay</span>
       </button>
 
       <p style="text-align: center; font-size: 0.75rem; color: #64748b; margin-top: 14px;">
-        🔒 Encrypted by Razorpay Security Standards. Immediate unlock guaranteed upon payment.
+        <i class="fa-solid fa-shield" style="margin-right: 4px;"></i> Encrypted by Razorpay Security Standards. Immediate unlock guaranteed upon payment.
       </p>
     </div>
   </div>
