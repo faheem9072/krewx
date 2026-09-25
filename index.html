@@ -816,17 +816,50 @@
   <!-- =========================================================================
        Section 6.5 — Krewx Admin Panel & Platform Dashboard
        ========================================================================= -->
+  <!-- =========================================================================
+       Section 6.5 — Krewx Admin Panel & Platform Dashboard
+       ========================================================================= -->
   <section class="admin-section" id="admin-panel" style="padding: 60px 0; background: rgba(10, 13, 18, 0.9);">
     <div class="container">
-      <div class="admin-dashboard fade-up">
+
+      <!-- Admin Gate / Sign-In Card -->
+      <div id="adminLoginGate" style="background: rgba(15, 23, 42, 0.85); border: 1px solid var(--border-medium); border-radius: var(--radius-xl); padding: 36px 28px; max-width: 480px; margin: 0 auto; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+        <div style="font-size: 2.8rem; margin-bottom: 12px;">🔐</div>
+        <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 8px;">Admin Security Gate</h2>
+        <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.5;">
+          Sign in with authorized admin credentials (<code>fm105595@gmail.com</code>) to access the Platform Ops Command Center.
+        </p>
+
+        <form id="adminGateLoginForm" style="display: flex; flex-direction: column; gap: 14px; text-align: left;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" style="font-size: 0.8rem;">Admin Email</label>
+            <input type="email" class="form-control" id="adminGateEmail" placeholder="fm105595@gmail.com" value="fm105595@gmail.com" required style="padding: 12px 14px;">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" style="font-size: 0.8rem;">Admin Password</label>
+            <input type="password" class="form-control" id="adminGatePassword" placeholder="Enter password" required style="padding: 12px 14px;">
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" id="adminGateSubmitBtn" style="margin-top: 8px; padding: 12px; font-weight: 700;">
+            🔑 Sign In to Admin Panel
+          </button>
+        </form>
+
+        <div id="adminAccessDeniedMsg" style="display: none; margin-top: 18px; padding: 12px 16px; background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #f87171; border-radius: var(--radius-md); font-size: 0.88rem; font-weight: 600; text-align: center;">
+          ⚠️ Access Denied: Only <code>fm105595@gmail.com</code> is authorized to view the Admin Command Center.
+        </div>
+      </div>
+
+      <!-- Admin Command Center Dashboard (Protected) -->
+      <div class="admin-dashboard fade-up" id="adminDashboardContent" style="display: none;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
           <div>
             <span class="section-tag" style="background: rgba(168, 85, 247, 0.2); color: #c084fc;">Krewx Platform Ops</span>
             <h2 class="section-title" style="margin-top: 8px; font-size: 1.8rem;">Admin Command Center</h2>
           </div>
-          <div style="display: flex; gap: 12px; align-items: center;">
-            <span class="quota-badge admin-tag">🔐 Live Operations Mode</span>
+          <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+            <span class="quota-badge admin-tag" id="adminUserTag">🔐 Admin: fm105595@gmail.com</span>
             <button class="btn btn-secondary btn-sm" id="refreshAdminStatsBtn">↻ Refresh Analytics</button>
+            <button class="btn btn-secondary btn-sm" id="adminSignOutBtn" style="border-color: #ef4444; color: #f87171;">Sign Out</button>
           </div>
         </div>
 
@@ -834,27 +867,27 @@
         <div class="admin-grid-stats">
           <div class="stat-card-item">
             <div class="stat-card-title">Total Platform Users</div>
-            <div class="stat-card-value" id="adminTotalUsers">24</div>
+            <div class="stat-card-value" id="adminTotalUsers">0</div>
           </div>
           <div class="stat-card-item">
             <div class="stat-card-title">Job Seekers</div>
-            <div class="stat-card-value" id="adminSeekersCount" style="color: #38bdf8;">16</div>
+            <div class="stat-card-value" id="adminSeekersCount" style="color: #38bdf8;">0</div>
           </div>
           <div class="stat-card-item">
             <div class="stat-card-title">Employers</div>
-            <div class="stat-card-value" id="adminEmployersCount" style="color: #f59e0b;">8</div>
+            <div class="stat-card-value" id="adminEmployersCount" style="color: #f59e0b;">0</div>
           </div>
           <div class="stat-card-item">
             <div class="stat-card-title">Active Job Posts</div>
-            <div class="stat-card-value" id="adminJobsCount" style="color: #10b981;">12</div>
+            <div class="stat-card-value" id="adminJobsCount" style="color: #10b981;">0</div>
           </div>
           <div class="stat-card-item">
             <div class="stat-card-title">Contact Unlocks</div>
-            <div class="stat-card-value" id="adminUnlocksCount" style="color: #ec4899;">38</div>
+            <div class="stat-card-value" id="adminUnlocksCount" style="color: #ec4899;">0</div>
           </div>
           <div class="stat-card-item">
             <div class="stat-card-title">Razorpay Revenue</div>
-            <div class="stat-card-value" id="adminRevenueTotal" style="color: var(--accent-lime);">₹3,200</div>
+            <div class="stat-card-value" id="adminRevenueTotal" style="color: var(--accent-lime);">₹0</div>
           </div>
         </div>
 
@@ -875,20 +908,9 @@
               </thead>
               <tbody id="adminUserTableBody">
                 <tr>
-                  <td><strong>Rahul Nair</strong><br><small>+91 98470 12345</small></td>
-                  <td><span class="kyc-badge verified">Job Seeker</span></td>
-                  <td>Catering & Event Support</td>
-                  <td>Ernakulam / Kochi</td>
-                  <td><span class="kyc-badge verified">Verified ✅</span></td>
-                  <td><button class="btn btn-secondary btn-sm" onclick="window.toggleUserKYC('u1')">Toggle KYC</button></td>
-                </tr>
-                <tr>
-                  <td><strong>Margin Free Supermarket</strong><br><small>+91 98950 44332</small></td>
-                  <td><span class="kyc-badge unverified">Employer</span></td>
-                  <td>Retail & Supermarket Ops</td>
-                  <td>Kozhikode</td>
-                  <td><span class="kyc-badge verified">Verified ✅</span></td>
-                  <td><button class="btn btn-secondary btn-sm" onclick="window.toggleUserKYC('u2')">Toggle KYC</button></td>
+                  <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                    Loading Firestore documents...
+                  </td>
                 </tr>
               </tbody>
             </table>

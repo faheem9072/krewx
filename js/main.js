@@ -8,7 +8,9 @@ import {
   auth, 
   storage, 
   collection, 
+  doc,
   addDoc, 
+  updateDoc,
   getDocs, 
   onSnapshot, 
   query, 
@@ -22,6 +24,8 @@ import {
   uploadBytes,
   getDownloadURL
 } from './firebase-config.js';
+
+const ADMIN_EMAIL = 'fm105595@gmail.com';
 
 // Global Platform State
 window.krewxState = {
@@ -45,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initModals();
   initStepForm();
   initFirebaseAuth();
+  initAdminGateAuth();
   initFormSubmissions();
   initMarketplaceTabs();
   initMarketplaceData();
@@ -55,6 +60,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const refreshBtn = document.getElementById('refreshAdminStatsBtn');
   if (refreshBtn) {
     refreshBtn.addEventListener('click', updateAdminDashboardUI);
+  }
+
+  const adminNav = document.getElementById('adminNavLink');
+  if (adminNav) {
+    adminNav.addEventListener('click', () => {
+      checkAdminAuth();
+    });
   }
 });
 
@@ -71,6 +83,7 @@ window.setPlatformRole = function(role) {
   showToast(`Switched role to: ${role === 'seeker' ? 'Job Seeker' : role === 'employer' ? 'Employer' : 'Admin Ops'}`, 'success');
 
   if (role === 'admin') {
+    checkAdminAuth();
     const adminSec = document.getElementById('admin-panel');
     if (adminSec) adminSec.scrollIntoView({ behavior: 'smooth' });
   }
@@ -238,25 +251,197 @@ function logAuditRecord(txId, role, targetName, type, amount, status) {
 }
 
 /* --------------------------------------------------------------------------
-   4. Admin Panel Operations & Worker KYC Toggle
+   4. Admin Gate & Real-time Firestore Dashboard Operations
    -------------------------------------------------------------------------- */
-window.toggleUserKYC = function(userId) {
-  const user = window.krewxState.users.find(u => u.id === userId);
-  if (user) {
-    user.verified = !user.verified;
-    showToast(`KYC status for ${user.name} updated to: ${user.verified ? 'Verified ✅' : 'Unverified ⏳'}`, 'info');
+function checkAdminAuth() {
+  const gate = document.getElementById('adminLoginGate');
+  const dashboard = document.getElementById('adminDashboardContent');
+  const accessDeniedMsg = document.getElementById('adminAccessDeniedMsg');
+  const userTag = document.getElementById('adminUserTag');
+
+  const currentUser = auth?.currentUser;
+
+  if (currentUser && currentUser.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+    if (gate) gate.style.display = 'none';
+    if (dashboard) dashboard.style.display = 'block';
+    if (accessDeniedMsg) accessDeniedMsg.style.display = 'none';
+    if (userTag) userTag.textContent = `🔐 Admin: ${currentUser.email}`;
     updateAdminDashboardUI();
+    return true;
+  } else {
+    if (gate) gate.style.display = 'block';
+    if (dashboard) dashboard.style.display = 'none';
+    if (currentUser) {
+      if (accessDeniedMsg) {
+        accessDeniedMsg.style.display = 'block';
+        accessDeniedMsg.innerHTML = `⚠️ Access Denied for <code>${escapeHtml(currentUser.email)}</code>. Admin privileges required for <code>${ADMIN_EMAIL}</code>.`;
+      }
+    } else {
+      if (accessDeniedMsg) accessDeniedMsg.style.display = 'none';
+    }
+    return false;
+  }
+}
+
+function initAdminGateAuth() {
+  const form = document.getElementById('adminGateLoginForm');
+  const emailInput = document.getElementById('adminGateEmail');
+  const passwordInput = document.getElementById('adminGatePassword');
+  const signOutBtn = document.getElementById('adminSignOutBtn');
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = emailInput?.value?.trim();
+      const password = passwordInput?.value?.trim();
+
+      if (!email || !password) {
+        showToast('Please enter admin email and password.', 'warning');
+        return;
+      }
+
+      try {
+        showToast('Authenticating admin credentials...', 'info');
+        await signInWithEmailAndPassword(auth, email, password);
+        const currentUser = auth.currentUser;
+        if (currentUser?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+          showToast(`Admin Access Granted! Welcome ${ADMIN_EMAIL}`, 'success');
+        } else {
+          showToast(`Access Denied: ${currentUser?.email} is not authorized as Admin.`, 'warning');
+        }
+        checkAdminAuth();
+      } catch (err) {
+        console.error("Admin Login Error:", err);
+        showToast(`Admin Auth Error: ${err.message}`, 'warning');
+      }
+    });
+  }
+
+  if (signOutBtn) {
+    signOutBtn.addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+        showToast('Signed out from Admin Panel.', 'info');
+        checkAdminAuth();
+      } catch (err) {
+        showToast(`Sign Out Error: ${err.message}`, 'warning');
+      }
+    });
+  }
+}
+
+window.toggleDocKYC = async function(collectionName, docId, newVerifiedState) {
+  if (!db) {
+    showToast("Firestore database connection not available.", "warning");
+    return;
+  }
+
+  try {
+    showToast(`Updating KYC status in Firestore...`, 'info');
+    const targetDocRef = doc(db, collectionName, docId);
+    await updateDoc(targetDocRef, { verified: newVerifiedState });
+
+    showToast(`KYC status updated to ${newVerifiedState ? 'Verified ✅' : 'Unverified ⏳'} in Firestore!`, 'success');
+    await updateAdminDashboardUI();
+  } catch (err) {
+    console.error("Error updating KYC in Firestore:", err);
+    showToast(`Failed to update KYC in Firestore: ${err.message}`, 'warning');
   }
 };
 
-function updateAdminDashboardUI() {
+async function updateAdminDashboardUI() {
   const uTotal = document.getElementById('adminTotalUsers');
-  const uRev = document.getElementById('adminRevenueTotal');
+  const uSeekers = document.getElementById('adminSeekersCount');
+  const uEmployers = document.getElementById('adminEmployersCount');
+  const uJobs = document.getElementById('adminJobsCount');
   const uUnlocks = document.getElementById('adminUnlocksCount');
+  const uRev = document.getElementById('adminRevenueTotal');
+  const tableBody = document.getElementById('adminUserTableBody');
 
-  if (uTotal) uTotal.textContent = window.krewxState.users.length + 22;
+  let workersDocs = [];
+  let jobsDocs = [];
+
+  try {
+    if (db) {
+      const workersSnap = await getDocs(collection(db, 'workers'));
+      workersSnap.forEach(docSnap => {
+        workersDocs.push({ id: docSnap.id, ...docSnap.data() });
+      });
+
+      const jobsSnap = await getDocs(collection(db, 'jobs'));
+      jobsSnap.forEach(docSnap => {
+        jobsDocs.push({ id: docSnap.id, ...docSnap.data() });
+      });
+    }
+  } catch (err) {
+    console.warn("Error fetching Firestore admin stats:", err);
+  }
+
+  const seekersCount = workersDocs.length;
+  const jobsCount = jobsDocs.length;
+  const employersCount = jobsCount;
+  const totalUsers = seekersCount + jobsCount;
+
+  if (uTotal) uTotal.textContent = totalUsers;
+  if (uSeekers) uSeekers.textContent = seekersCount;
+  if (uEmployers) uEmployers.textContent = employersCount;
+  if (uJobs) uJobs.textContent = jobsCount;
+  if (uUnlocks) uUnlocks.textContent = window.krewxState.unlockedIds.size;
   if (uRev) uRev.textContent = `₹${window.krewxState.revenue}`;
-  if (uUnlocks) uUnlocks.textContent = window.krewxState.unlockedIds.size + 36;
+
+  // Render Real Worker & Employer Table
+  if (tableBody) {
+    tableBody.innerHTML = '';
+
+    if (workersDocs.length === 0 && jobsDocs.length === 0) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">
+            No worker or job documents found in Firestore yet. Submit a job post or worker application to see live rows!
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    // Render Worker Documents (Job Seekers)
+    workersDocs.forEach(w => {
+      const tr = document.createElement('tr');
+      const isVerified = w.verified !== false;
+      tr.innerHTML = `
+        <td><strong>${escapeHtml(w.name || 'Job Seeker')}</strong><br><small>${escapeHtml(w.phone || 'No phone')}</small></td>
+        <td><span class="kyc-badge verified">Job Seeker</span></td>
+        <td>${escapeHtml(w.skill || 'General Support')}</td>
+        <td>${escapeHtml(w.city || 'Kerala')}</td>
+        <td><span class="kyc-badge ${isVerified ? 'verified' : 'unverified'}">${isVerified ? 'Verified ✅' : 'Pending ⏳'}</span></td>
+        <td>
+          <button class="btn btn-secondary btn-sm" onclick="window.toggleDocKYC('workers', '${w.id}', ${!isVerified})">
+            Toggle KYC
+          </button>
+        </td>
+      `;
+      tableBody.appendChild(tr);
+    });
+
+    // Render Job Documents (Employers)
+    jobsDocs.forEach(j => {
+      const tr = document.createElement('tr');
+      const isVerified = j.verified !== false;
+      tr.innerHTML = `
+        <td><strong>${escapeHtml(j.companyName || j.contactName || 'Employer')}</strong><br><small>${escapeHtml(j.contactDetail || 'No contact')}</small></td>
+        <td><span class="kyc-badge unverified">Employer</span></td>
+        <td>${escapeHtml(j.category || j.title || 'Workforce')}</td>
+        <td>${escapeHtml(j.location || 'Kerala')}</td>
+        <td><span class="kyc-badge ${isVerified ? 'verified' : 'unverified'}">${isVerified ? 'Verified ✅' : 'Pending ⏳'}</span></td>
+        <td>
+          <button class="btn btn-secondary btn-sm" onclick="window.toggleDocKYC('jobs', '${j.id}', ${!isVerified})">
+            Toggle KYC
+          </button>
+        </td>
+      `;
+      tableBody.appendChild(tr);
+    });
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -504,6 +689,7 @@ function initFirebaseAuth() {
         if (loggedInActions) loggedInActions.style.display = 'none';
         if (authForm) authForm.style.display = 'flex';
       }
+      checkAdminAuth();
     });
   }
 
@@ -680,6 +866,7 @@ function initFirestoreRealtime() {
       if (!snapshot.empty) {
         console.log(`🔥 Realtime update: ${snapshot.size} jobs from Firestore`);
       }
+      updateAdminDashboardUI();
     }, (err) => console.log("Firestore jobs subscription note:", err.message));
 
     const workersRef = collection(db, 'workers');
@@ -687,6 +874,7 @@ function initFirestoreRealtime() {
       if (!snapshot.empty) {
         console.log(`🔥 Realtime update: ${snapshot.size} workers from Firestore`);
       }
+      updateAdminDashboardUI();
     }, (err) => console.log("Firestore workers subscription note:", err.message));
   } catch (err) {
     console.warn("Firestore realtime setup note:", err);
@@ -714,6 +902,16 @@ function initMarketplaceTabs() {
       });
     });
   });
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 function showToast(message, type = 'success') {
