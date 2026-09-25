@@ -302,7 +302,20 @@ function initAdminGateAuth() {
 
       try {
         showToast('Authenticating admin credentials...', 'info');
-        await signInWithEmailAndPassword(auth, email, password);
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+        } catch (signInErr) {
+          // If admin account doesn't exist in Firebase Auth yet, auto-register on first sign-in
+          if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+            try {
+              await createUserWithEmailAndPassword(auth, email, password);
+            } catch (createErr) {
+              throw signInErr;
+            }
+          } else {
+            throw signInErr;
+          }
+        }
         const currentUser = auth.currentUser;
         if (currentUser?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
           showToast(`Admin Access Granted! Welcome ${ADMIN_EMAIL}`, 'success');
