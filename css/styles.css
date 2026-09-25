@@ -4,38 +4,50 @@
    Palette: Dark Charcoal (#090B0E), Elevated Card (#161B24), Lime Green Accent (#8CF522)
    ========================================================================== */
 
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap');
+
 /* --------------------------------------------------------------------------
-   1. Design Tokens & CSS Variables
+   1. Design Tokens & CSS Variables (Option 2: Deep Slate & Warm Copper)
    -------------------------------------------------------------------------- */
 :root {
   /* Colors */
-  --bg-dark: #07090c;
-  --bg-primary: #0a0d12;
-  --bg-secondary: #12161f;
-  --bg-card: #171c26;
-  --bg-card-hover: #1e2432;
-  --bg-glass: rgba(18, 22, 31, 0.75);
+  --bg-dark: #0D1117;
+  --bg-primary: #121720;
+  --bg-secondary: #161B22;
+  --bg-card: #1C212A;
+  --bg-card-hover: #252C37;
+  --bg-glass: rgba(22, 27, 34, 0.85);
   
-  --border-subtle: rgba(255, 255, 255, 0.07);
-  --border-medium: rgba(255, 255, 255, 0.14);
-  --border-lime: rgba(140, 245, 34, 0.35);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(224, 109, 83, 0.22);
+  --border-accent: rgba(224, 109, 83, 0.45);
+  --border-lime: rgba(224, 109, 83, 0.35);
   
-  /* Brand Accent */
-  --accent-lime: #8cf522;
-  --accent-lime-hover: #9ef01a;
-  --accent-lime-dark: #70cc10;
-  --accent-lime-dim: rgba(140, 245, 34, 0.1);
-  --accent-lime-glow: rgba(140, 245, 34, 0.22);
+  /* Brand Accent - Warm Copper & Rust */
+  --accent-copper: #E06D53;
+  --accent-copper-hover: #EC7A61;
+  --accent-copper-dark: #C4553B;
+  --accent-copper-dim: rgba(224, 109, 83, 0.14);
+  --accent-copper-glow: rgba(224, 109, 83, 0.28);
+  
+  --accent-lime: #E06D53;
+  --accent-lime-hover: #EC7A61;
+  --accent-lime-dark: #C4553B;
+  --accent-lime-dim: rgba(224, 109, 83, 0.14);
+  --accent-lime-glow: rgba(224, 109, 83, 0.28);
+  
+  --accent-gold: #F59E0B;
+  --accent-amber: #F59E0B;
   
   /* Typography Colors */
-  --text-primary: #ffffff;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --text-inverse: #07090c;
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --text-inverse: #0D1117;
   
   /* Typography Fonts */
-  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-sans: 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Space Grotesk', 'Work Sans', sans-serif;
   
   /* Layout & Spacing */
   --container-max: 1240px;
@@ -46,14 +58,15 @@
   --radius-pill: 9999px;
   
   /* Shadows & Glows */
-  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
-  --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.4);
-  --shadow-lime: 0 8px 30px rgba(140, 245, 34, 0.25);
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.5);
+  --shadow-lime: 0 8px 30px rgba(224, 109, 83, 0.3);
+  --shadow-copper: 0 8px 30px rgba(224, 109, 83, 0.3);
   
   /* Transitions */
   --transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-normal: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-slow: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 0.6s cubic-bezier(0.6, 1, 0.3, 1);
 }
 
 /* --------------------------------------------------------------------------
@@ -78,7 +91,7 @@ html {
 body {
   overflow-x: hidden;
   line-height: 1.6;
-  background: radial-gradient(circle at 50% 0%, #151a24 0%, var(--bg-dark) 70%);
+  background: radial-gradient(circle at 50% 0%, #1A222E 0%, var(--bg-dark) 75%);
   min-height: 100vh;
 }
 
@@ -149,10 +162,14 @@ button, input, select, textarea {
   display: block;
 }
 
+.section-title, .hero-title, .modal-title, .process-title, .why-card-title, .service-title, .job-card-title, .cta-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
 .section-title {
   font-size: clamp(2rem, 4vw, 3.2rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
   line-height: 1.15;
   color: var(--text-primary);
 }
@@ -285,12 +302,12 @@ button, input, select, textarea {
   object-fit: contain;
   display: block;
   transition: transform var(--transition-fast), filter var(--transition-fast);
-  filter: drop-shadow(0 0 12px rgba(140, 245, 34, 0.35));
+  filter: drop-shadow(0 0 12px rgba(224, 109, 83, 0.4));
 }
 
 .brand-logo:hover .brand-logo-img {
   transform: translateY(-1px) scale(1.04);
-  filter: drop-shadow(0 0 20px rgba(140, 245, 34, 0.65));
+  filter: drop-shadow(0 0 20px rgba(224, 109, 83, 0.7));
 }
 
 .header-logo-badge,
@@ -298,8 +315,8 @@ button, input, select, textarea {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #0a0d12;
-  border: 1px solid rgba(140, 245, 34, 0.3);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-accent);
   padding: 8px 16px;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
@@ -309,8 +326,8 @@ button, input, select, textarea {
 .brand-logo:hover .header-logo-badge,
 .footer-brand-logo:hover .logo-artboard-badge {
   transform: translateY(-1px) scale(1.03);
-  border-color: var(--accent-lime);
-  box-shadow: 0 6px 24px rgba(140, 245, 34, 0.4), 0 0 0 2px var(--accent-lime);
+  border-color: var(--accent-copper);
+  box-shadow: 0 6px 24px rgba(224, 109, 83, 0.45), 0 0 0 2px var(--accent-copper);
 }
 
 .brand-logo-artboard {
@@ -452,6 +469,19 @@ button, input, select, textarea {
   padding-bottom: 90px;
   position: relative;
   overflow: hidden;
+  background: radial-gradient(circle at 75% 25%, rgba(224, 109, 83, 0.14) 0%, transparent 65%),
+              radial-gradient(circle at 20% 75%, rgba(245, 158, 11, 0.08) 0%, transparent 50%),
+              var(--bg-dark);
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: 0.55;
+  pointer-events: none;
 }
 
 .hero-grid {
@@ -467,8 +497,9 @@ button, input, select, textarea {
 }
 
 .hero-title {
+  font-family: var(--font-display);
   font-size: clamp(2.8rem, 5vw, 4.2rem);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.08;
   letter-spacing: -0.03em;
   margin-top: 20px;
@@ -532,7 +563,7 @@ button, input, select, textarea {
   border-radius: var(--radius-xl);
   overflow: hidden;
   border: 1px solid var(--border-medium);
-  box-shadow: var(--shadow-card), 0 0 60px rgba(140, 245, 34, 0.08);
+  box-shadow: var(--shadow-card), 0 0 60px rgba(224, 109, 83, 0.15);
 }
 
 .hero-image-wrapper img {
