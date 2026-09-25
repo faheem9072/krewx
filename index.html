@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Krewx — Your Crew, On Demand | Modern Workforce & Staffing Platform</title>
+  <meta name="description"
+    content="Krewx connects businesses and organizations with reliable, verified people for housekeeping, catering & events, warehouse duties, retail, drivers, and on-demand operational workforce requirements.">
+  <meta name="theme-color" content="#0a0d12">
+
+  <!-- Favicon & Touch Icons -->
+  <link rel="icon" type="image/png" href="assets/images/favicon-krewx.png">
+  <link rel="apple-touch-icon" href="assets/images/favicon-krewx.png">
+
+  <!-- Performance & Preload Links -->
+  <link rel="preload" href="css/styles.css" as="style">
+  <link rel="preload" href="assets/images/hero-crew.png" as="image">
+
+  <!-- Google Fonts & Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Icon Asset Library (Font Awesome 6.5) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Razorpay Checkout SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <!-- Main Application CSS Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Open Graph & Social Asset Links -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Krewx — Your Crew, On Demand">
+  <meta property="og:description" content="Connect with dependable workforce crews for housekeeping, catering, warehouse operations, retail, drivers, and flexible shift roles.">
+  <meta property="og:image" content="assets/images/krewx-logo-horizontal.png">
+</head>
+
+<body>
+
+  <!-- =========================================================================
+       Site Header / Navigation Bar
+       ========================================================================= -->
+  <header class="navbar site-header" id="siteHeader">
+    <div class="container nav-container">
+      <div class="logo">
+        <a href="#" class="brand-logo" aria-label="Krewx Home">
+          <img src="assets/images/krewx-logo-header-white.png" alt="Krewx — Your Crew, On Demand"
+            class="brand-logo-img">
+        </a>
+      </div>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="#services" class="nav-link">Services</a>
+        <a href="#marketplace" class="nav-link">Live Jobs</a>
+        <a href="#admin-panel" class="nav-link" id="adminNavLink">Admin Panel</a>
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+        
+        <!-- User Quota & Role Badge -->
+        <div class="user-header-status">
+          <button class="role-switch-btn" id="roleSwitchBtn" title="Click to switch between Job Seeker and Employer role">
+            <span id="roleLabel">Role: Job Seeker</span> 🔄
+          </button>
+          <span class="quota-badge" id="userQuotaBadge">
+            ⚡ <span id="quotaCountText">5 Free Unlocks Left</span>
+          </span>
+        </div>
+
+        <button class="btn btn-secondary btn-sm" data-modal-target="roleModal">
+          <span>Auth & Role</span>
+        </button>
+        <button class="btn btn-primary btn-sm" data-modal-target="bookingModal">
+          <span>Post a Job &rarr;</span>
+        </button>
+      </nav>
+
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Navigation Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       Section 1 — Hero Section
+       ========================================================================= -->
+  <section class="hero-section" id="hero">
+    <div class="container hero-grid">
+      <div class="hero-content fade-up">
+        <div class="badge">
+          <span class="badge-dot"></span>
+          <span>On-Demand Workforce Platform</span>
+        </div>
+
+        <h1 class="hero-title">
+          Reliable Crews. <br>
+          <span class="highlight">On Demand.</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          Connect with dependable people for the work that keeps your business moving — or join our active crew network
+          for flexible shift opportunities.
+        </p>
+
+        <div class="hero-ctas">
+          <button class="btn btn-primary btn-lg" data-modal-target="bookingModal">
+            <span>Book a Crew</span>
+            <svg class="arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+
+          <button class="btn btn-secondary btn-lg" data-modal-target="workerModal">
+            <span>Find Work & Join Crew</span>
+          </button>
+        </div>
+
+        <div class="hero-trust-bar">
+          <div class="trust-item">
+            <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <span class="trust-text">Verified Support Personnel</span>
+          </div>
+
+          <div class="trust-item">
+            <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span class="trust-text">Rapid Dispatch & Response</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual fade-up" style="transition-delay: 0.15s;">
+        <div class="hero-image-wrapper">
+          <img src="assets/images/hero-crew.png"
+            alt="Diverse professional workforce operating in an authentic workplace environment">
+
+          <div class="hero-badge-overlay">
+            <div class="hero-status">
+              <span class="status-indicator"></span>
+              <div>
+                <div class="status-title">Active Crews Ready</div>
+                <div class="status-desc">Facility, Logistics, Hospitality & Events</div>
+              </div>
+            </div>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8CF522" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       Section 1.5 — Live Uber-Style Marketplace (Dual Platform Widget)
+       ========================================================================= -->
+  <section class="marketplace-section" id="marketplace">
+    <div class="container">
+      <div class="section-header center fade-up">
+        <span class="section-tag">Live Marketplace</span>
+        <h2 class="section-title">Uber for Local Jobs & Workers</h2>
+        <p class="section-subtitle">
+          Explore active shift openings near you or dispatch verified crews for your operations.
+        </p>
+      </div>
+
+      <!-- Marketplace Tab Selector -->
+      <div class="marketplace-tabs-wrap fade-up">
+        <button class="market-tab-btn active" data-tab-target="tab-jobs">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+          <span>💼 Active Job Openings</span>
+          <span class="tab-count-badge">12 Active</span>
+        </button>
+
+        <button class="market-tab-btn" data-tab-target="tab-crews">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <span>⚡ Available Crews</span>
+          <span class="tab-count-badge lime">8 Crews</span>
+        </button>
+      </div>
+
+      <!-- Tab Content 1: Live Job Openings for Youth/Seekers -->
+      <div class="market-tab-content active" id="tab-jobs">
+        <div class="job-cards-grid">
+          <!-- Job 1: Temporary Shift -->
+          <div class="job-card fade-up">
+            <div class="job-card-header">
+              <span class="job-category-tag">Events & Catering</span>
+              <span class="badge-type temp">⚡ Temporary Shift</span>
+            </div>
+            <h3 class="job-card-title">Catering & Event Helper Crew</h3>
+            <div class="job-meta">
+              <span>📍 Ernakulam / Kochi</span>
+              <span>⏰ 8 Hours Shift</span>
+              <span>👥 6 Openings</span>
+            </div>
+            <p class="job-desc">Marriage function & banquet service support. Immediate payout & food provided.</p>
+            <div class="job-card-footer">
+              <span class="job-payout">₹800 - ₹1,200 <small>/ Shift</small></span>
+              <button class="btn btn-primary btn-sm" data-modal-target="workerModal" data-job="Catering & Events">
+                <span>Apply for Shift</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Job 2: Permanent Shop Staff -->
+          <div class="job-card fade-up">
+            <div class="job-card-header">
+              <span class="job-category-tag">Retail & Local Shops</span>
+              <span class="badge-type perm">💼 Permanent Job</span>
+            </div>
+            <h3 class="job-card-title">Full-Time Store Sales Executive</h3>
+            <div class="job-meta">
+              <span>📍 Kozhikode & Kochi</span>
+              <span>⏰ Monthly Full-Time</span>
+              <span>👥 4 Openings</span>
+            </div>
+            <p class="job-desc">Permanent supermarket counter associate, customer assistance & billing support.</p>
+            <div class="job-card-footer">
+              <span class="job-payout">₹16,000 - ₹22,000 <small>/ Month</small></span>
+              <button class="btn btn-primary btn-sm" data-modal-target="workerModal" data-job="Retail & Shop Staff">
+                <span>Apply for Job</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Job 3: Permanent Driver -->
+          <div class="job-card fade-up">
+            <div class="job-card-header">
+              <span class="job-category-tag">Drivers & Transport</span>
+              <span class="badge-type perm">💼 Permanent Job</span>
+            </div>
+            <h3 class="job-card-title">Permanent Private & Store Driver</h3>
+            <div class="job-meta">
+              <span>📍 Thrissur & Ernakulam</span>
+              <span>⏰ Full-Time Monthly</span>
+              <span>👥 3 Openings</span>
+            </div>
+            <p class="job-desc">Permanent family driver & retail delivery vehicle driver. Fixed monthly salary.</p>
+            <div class="job-card-footer">
+              <span class="job-payout">₹18,000 - ₹25,000 <small>/ Month</small></span>
+              <button class="btn btn-primary btn-sm" data-modal-target="workerModal" data-job="Drivers & Transport">
+                <span>Apply for Job</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Job 4: Temporary Warehouse Helper -->
+          <div class="job-card fade-up">
+            <div class="job-card-header">
+              <span class="job-category-tag">Warehouse & Logistics</span>
+              <span class="badge-type temp">⚡ Temporary Shift</span>
+            </div>
+            <h3 class="job-card-title">Goods Packing & Loading Helper</h3>
+            <div class="job-meta">
+              <span>📍 Kozhikode City</span>
+              <span>⏰ Day Shift</span>
+              <span>👥 10 Openings</span>
+            </div>
+            <p class="job-desc">Package sorting, inventory scanning & loading at distribution hub for 3 days.</p>
+            <div class="job-card-footer">
+              <span class="job-payout">₹900 - ₹1,100 <small>/ Shift</small></span>
+              <button class="btn btn-primary btn-sm" data-modal-target="workerModal" data-job="Warehouse & Operations">
+                <span>Apply for Shift</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Job 5: Temporary Driver Shift -->
+          <div class="job-card fade-up">
+            <div class="job-card-header">
+              <span class="job-category-tag">Drivers & Transport</span>
+              <span class="badge-type temp">⚡ Temporary Shift</span>
+            </div>
+            <h3 class="job-card-title">1-Day / On-Demand Trip Driver</h3>
+            <div class="job-meta">
+              <span>📍 Malappuram & Palakkad</span>
+              <span>⏰ Single Day Shift</span>
+              <span>👥 5 Openings</span>
+            </div>
+            <p class="job-desc">On-demand trip driver for outstation travel & emergency store logistics delivery.</p>
+            <div class="job-card-footer">
+              <span class="job-payout">₹1,000 - ₹1,500 <small>/ Day</small></span>
+              <button class="btn btn-primary btn-sm" data-modal-target="workerModal" data-job="Drivers & Transport">
+                <span>Apply for Shift</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 2: Ready Crews for Employers -->
+      <div class="market-tab-content" id="tab-crews" style="display: none;">
+        <div class="crew-cards-grid">
+          <div class="crew-status-card fade-up">
+            <div class="crew-card-head">
+              <div class="crew-avatar-group">
+                <span class="avatar-dot"></span>
+                <strong>Verified Event Support Team</strong>
+              </div>
+              <span class="dispatch-tag">⚡ < 30 Min Dispatch</span>
+            </div>
+            <p class="crew-card-detail">12 Active youth personnel available for catering, table setup & venue ops in
+              Ernakulam.</p>
+            <div class="crew-card-action">
+              <button class="btn btn-primary btn-sm btn-full" data-modal-target="bookingModal"
+                data-category="Catering & Events">
+                <span>Book This Crew</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="crew-status-card fade-up">
+            <div class="crew-card-head">
+              <div class="crew-avatar-group">
+                <span class="avatar-dot"></span>
+                <strong>Logistics & Packing Team</strong>
+              </div>
+              <span class="dispatch-tag">⚡ Ready Now</span>
+            </div>
+            <p class="crew-card-detail">8 Experienced warehouse assistants ready for loading, unloading & inventory
+              tasks.</p>
+            <div class="crew-card-action">
+              <button class="btn btn-primary btn-sm btn-full" data-modal-target="bookingModal"
+                data-category="Warehouse & Operations">
+                <span>Book This Crew</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="crew-status-card fade-up">
+            <div class="crew-card-head">
+              <div class="crew-avatar-group">
+                <span class="avatar-dot"></span>
+                <strong>Retail & Store Support Pool</strong>
+              </div>
+              <span class="dispatch-tag">⚡ Ready Now</span>
+            </div>
+            <p class="crew-card-detail">10 Verified retail associates for supermarket counters, store inventory & sales
+              assistance.</p>
+            <div class="crew-card-action">
+              <button class="btn btn-primary btn-sm btn-full" data-modal-target="bookingModal"
+                data-category="Retail & Shop Staff">
+                <span>Book Retail Staff</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="crew-status-card fade-up">
+            <div class="crew-card-head">
+              <div class="crew-avatar-group">
+                <span class="avatar-dot"></span>
+                <strong>On-Demand Driver Network</strong>
+              </div>
+              <span class="dispatch-tag">⚡ Rapid On-Call</span>
+            </div>
+            <p class="crew-card-detail">6 Verified drivers with valid LMV/HMV licenses for personal trips & store
+              delivery transport.</p>
+            <div class="crew-card-action">
+              <button class="btn btn-primary btn-sm btn-full" data-modal-target="bookingModal"
+                data-category="Drivers & Transport">
+                <span>Book Driver Now</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       Section 2 — What We Do (Service Categories)
+       ========================================================================= -->
+  <section class="services-section" id="services">
+    <div class="container">
+      <div class="section-header center fade-up">
+        <span class="section-tag">What We Do</span>
+        <h2 class="section-title">Core Service Categories</h2>
+        <p class="section-subtitle">
+          From everyday operational upkeep to high-demand event rushes, Krewx delivers trained, reliable workforce
+          coverage.
+        </p>
+      </div>
+
+      <div class="services-grid">
+        <!-- Category 1: Housekeeping -->
+        <article class="service-card fade-up">
+          <div class="service-image-holder">
+            <img src="assets/images/service-housekeeping.png"
+              alt="Commercial Housekeeping and Facility Maintenance Professionals">
+            <span class="service-tag-badge">Facility Care</span>
+          </div>
+          <div class="service-body">
+            <h3 class="service-title">Housekeeping</h3>
+            <p class="service-desc">
+              Commercial sanitation, daily facility upkeep, deep cleaning, and hotel hospitality support. Maintained to
+              rigorous standard specifications.
+            </p>
+            <div class="service-footer">
+              <button class="service-action-btn" data-modal-target="bookingModal" data-category="Housekeeping">
+                <span>Book Housekeeping</span>
+                <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Category 2: Catering & Events -->
+        <article class="service-card fade-up" style="transition-delay: 0.1s;">
+          <div class="service-image-holder">
+            <img src="assets/images/service-catering.png" alt="Professional Catering and Event Logistics Support Staff">
+            <span class="service-tag-badge">Events & Hospitality</span>
+          </div>
+          <div class="service-body">
+            <h3 class="service-title">Catering & Events</h3>
+            <p class="service-desc">
+              Banquet setup, food service assistance, kitchen utility staff, and event venue operations to keep guest
+              experiences seamless.
+            </p>
+            <div class="service-footer">
+              <button class="service-action-btn" data-modal-target="bookingModal" data-category="Catering & Events">
+                <span>Book Event Crew</span>
+                <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Category 3: Warehouse & Operations -->
+        <article class="service-card fade-up" style="transition-delay: 0.2s;">
+          <div class="service-image-holder">
+            <img src="assets/images/service-warehouse.png" alt="Warehouse Operations and Fulfillment Personnel">
+            <span class="service-tag-badge">Logistics</span>
+          </div>
+          <div class="service-body">
+            <h3 class="service-title">Warehouse & Operations</h3>
+            <p class="service-desc">
+              Loading/unloading, order fulfillment support, inventory movement, and packing for distribution hubs and
+              logistics centers.
+            </p>
+            <div class="service-footer">
+              <button class="service-action-btn" data-modal-target="bookingModal"
+                data-category="Warehouse & Operations">
+                <span>Book Warehouse Crew</span>
+                <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Category 4: On-Demand Workforce -->
+        <article class="service-card fade-up" style="transition-delay: 0.3s;">
+          <div class="service-image-holder">
+            <img src="assets/images/service-ondemand.png" alt="Flexible On-Demand Operational Support Workers">
+            <span class="service-tag-badge">Flexible Staffing</span>
+          </div>
+          <div class="service-body">
+            <h3 class="service-title">On-Demand Workforce</h3>
+            <p class="service-desc">
+              Flexible shift coverage for sudden workload surges, seasonal spikes, or short-notice staff coverage across
+              operational sectors.
+            </p>
+            <div class="service-footer">
+              <button class="service-action-btn" data-modal-target="bookingModal" data-category="On-Demand Workforce">
+                <span>Book Flexible Crew</span>
+                <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Category 5: Retail & Local Shop Staffing -->
+        <article class="service-card fade-up" style="transition-delay: 0.4s;">
+          <div class="service-image-holder">
+            <img src="assets/images/service-housekeeping.png" alt="Retail and Local Shop Support Personnel">
+            <span class="service-tag-badge">Retail & Shops</span>
+          </div>
+          <div class="service-body">
+            <h3 class="service-title">Retail & Local Shop Staff</h3>
+            <p class="service-desc">
+              Counter sales associates, supermarket helpers, retail cashiers, and store inventory assistants for local
+              business operations.
+            </p>
+            <div class="service-footer">
+              <button class="service-action-btn" data-modal-target="bookingModal" data-category="Retail & Shop Staff">
+                <span>Book Retail Staff</span>
+                <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Category 6: On-Demand Drivers & Transport -->
+        <article class="service-card fade-up" style="transition-delay: 0.5s;">
+          <div class="service-image-holder">
+            <img src="assets/images/service-ondemand.png" alt="On-Demand Drivers and Commercial Transport Personnel">
+            <span class="service-tag-badge">Drivers & Transport</span>
+          </div>
+          <div class="service-body">
+            <h3 class="service-title">Drivers & Transport Support</h3>
+            <p class="service-desc">
+              Verified personal drivers, commercial store delivery drivers, tempo operators, and logistics transport
+              specialists.
+            </p>
+            <div class="service-footer">
+              <button class="service-action-btn" data-modal-target="bookingModal" data-category="Drivers & Transport">
+                <span>Book Driver Support</span>
+                <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       Section 3 — How Krewx Works
+       ========================================================================= -->
+  <section class="process-section" id="how-it-works">
+    <div class="container">
+      <div class="section-header center fade-up">
+        <span class="section-tag">Simple Process</span>
+        <h2 class="section-title">How Krewx Works</h2>
+        <p class="section-subtitle">
+          Three streamlined steps to get dependable workforce support right where you need it.
+        </p>
+      </div>
+
+      <div class="process-grid">
+        <!-- Step 1 -->
+        <div class="process-card fade-up">
+          <div class="process-num">01</div>
+          <h3 class="process-title">Tell Us What You Need</h3>
+          <p class="process-desc">
+            Specify your operational requirements, crew size, schedule, location, and key skills needed.
+          </p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="process-card fade-up" style="transition-delay: 0.15s;">
+          <div class="process-num">02</div>
+          <h3 class="process-title">We Find the Right Crew</h3>
+          <p class="process-desc">
+            We match your request with dependable, background-vetted workers ready to report for duty.
+          </p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="process-card fade-up" style="transition-delay: 0.3s;">
+          <div class="process-num">03</div>
+          <h3 class="process-title">Get the Work Done</h3>
+          <p class="process-desc">
+            Your crew arrives on site prepared and supported, ensuring your operations execute without disruption.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       Section 4 — Why Krewx
+       ========================================================================= -->
+  <section class="why-section" id="why-krewx">
+    <div class="container">
+      <div class="section-header center fade-up">
+        <span class="section-tag">Core Advantages</span>
+        <h2 class="section-title">Why Businesses Choose Krewx</h2>
+        <p class="section-subtitle">
+          Grounded in practical dependability, operational speed, and straightforward coordination.
+        </p>
+      </div>
+
+      <div class="why-grid">
+        <!-- Feature 1 -->
+        <div class="why-card fade-up">
+          <div class="why-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <h3 class="why-card-title">Reliable Workforce</h3>
+          <p class="why-card-desc">Every crew member is screened for reliability, punctual attendance, and work ethic.
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="why-card fade-up" style="transition-delay: 0.1s;">
+          <div class="why-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+          </div>
+          <h3 class="why-card-title">Quick Response</h3>
+          <p class="why-card-desc">Fast dispatch mechanisms to cover unexpected staffing gaps or urgent shift requests.
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="why-card fade-up" style="transition-delay: 0.2s;">
+          <div class="why-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </div>
+          <h3 class="why-card-title">Flexible Staffing</h3>
+          <p class="why-card-desc">Scale workforce size up or down effortlessly based on operational shift demands.</p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="why-card fade-up" style="transition-delay: 0.3s;">
+          <div class="why-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <h3 class="why-card-title">Professional Support</h3>
+          <p class="why-card-desc">Dedicated point of contact and responsive operational support for every booking.</p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="why-card fade-up" style="transition-delay: 0.4s;">
+          <div class="why-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <h3 class="why-card-title">Easy Coordination</h3>
+          <p class="why-card-desc">Transparent scheduling and clear communication with zero administrative headaches.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       Section 5 — For Businesses ("Your Work. Our Crew.")
+       ========================================================================= -->
+  <section class="business-section" id="for-businesses">
+    <div class="container">
+      <div class="business-grid">
+        <div class="business-content fade-up">
+          <span class="section-tag">For Organizations & Enterprise</span>
+          <h2 class="section-title">Your Work. Our Crew.</h2>
+          <p class="section-subtitle">
+            Krewx helps businesses handle workforce requirements without unnecessary complexity, bloated retainer
+            contracts, or administrative strain.
+          </p>
+
+          <ul class="feature-list">
+            <li class="feature-item">
+              <div class="feature-check">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <div class="feature-text"><strong>Short-Notice Coverage:</strong> Fill unexpected absences or urgent shift
+                spikes in hours.</div>
+            </li>
+
+            <li class="feature-item">
+              <div class="feature-check">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <div class="feature-text"><strong>Standardized Service Quality:</strong> Dependable crews trained for
+                operational execution.</div>
+            </li>
+
+            <li class="feature-item">
+              <div class="feature-check">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <div class="feature-text"><strong>Streamlined Billing:</strong> Clear itemized invoicing with transparent
+                hourly or shift pricing.</div>
+            </li>
+          </ul>
+
+          <button class="btn btn-primary btn-lg" data-modal-target="bookingModal">
+            <span>Get Started</span>
+            <svg class="arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
+
+        <div class="business-visual fade-up" style="transition-delay: 0.15s;">
+          <div class="business-image-box">
+            <img src="assets/images/business-crew.png" alt="Corporate Manager coordinating with Krewx Crew Lead">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       Section 6 — For Crew / Workers ("Be Part of the Crew.")
+       ========================================================================= -->
+  <section class="worker-section" id="for-crew">
+    <div class="container">
+      <div class="worker-card-banner fade-up">
+        <div class="worker-info">
+          <span class="badge">Job Opportunities</span>
+          <h2 class="section-title" style="margin-top: 16px;">Be Part of the Crew.</h2>
+          <p class="section-subtitle">
+            Looking for reliable work with fair pay and flexible scheduling? Join Krewx and get matched with reputable
+            business clients across housekeeping, events, logistics, and facilities.
+          </p>
+
+          <div class="worker-perks">
+            <div class="perk-item">
+              <svg class="perk-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Prompt, Reliable Payouts</span>
+            </div>
+
+            <div class="perk-item">
+              <svg class="perk-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Flexible Work Shifts</span>
+            </div>
+
+            <div class="perk-item">
+              <svg class="perk-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Respectful Work Environments</span>
+            </div>
+
+            <div class="perk-item">
+              <svg class="perk-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Growth & Skill Development</span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-lg" data-modal-target="workerModal">
+            <span>Join Krewx</span>
+            <svg class="arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
+
+        <div class="worker-image-wrap">
+          <img src="assets/images/worker-join.png" alt="Confident Krewx crew member smiling on site">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       Section 6.5 — Krewx Admin Panel & Platform Dashboard
+       ========================================================================= -->
+  <section class="admin-section" id="admin-panel" style="padding: 60px 0; background: rgba(10, 13, 18, 0.9);">
+    <div class="container">
+      <div class="admin-dashboard fade-up">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <span class="section-tag" style="background: rgba(168, 85, 247, 0.2); color: #c084fc;">Krewx Platform Ops</span>
+            <h2 class="section-title" style="margin-top: 8px; font-size: 1.8rem;">Admin Command Center</h2>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <span class="quota-badge admin-tag">🔐 Live Operations Mode</span>
+            <button class="btn btn-secondary btn-sm" id="refreshAdminStatsBtn">↻ Refresh Analytics</button>
+          </div>
+        </div>
+
+        <!-- Metrics Overview Grid -->
+        <div class="admin-grid-stats">
+          <div class="stat-card-item">
+            <div class="stat-card-title">Total Platform Users</div>
+            <div class="stat-card-value" id="adminTotalUsers">24</div>
+          </div>
+          <div class="stat-card-item">
+            <div class="stat-card-title">Job Seekers</div>
+            <div class="stat-card-value" id="adminSeekersCount" style="color: #38bdf8;">16</div>
+          </div>
+          <div class="stat-card-item">
+            <div class="stat-card-title">Employers</div>
+            <div class="stat-card-value" id="adminEmployersCount" style="color: #f59e0b;">8</div>
+          </div>
+          <div class="stat-card-item">
+            <div class="stat-card-title">Active Job Posts</div>
+            <div class="stat-card-value" id="adminJobsCount" style="color: #10b981;">12</div>
+          </div>
+          <div class="stat-card-item">
+            <div class="stat-card-title">Contact Unlocks</div>
+            <div class="stat-card-value" id="adminUnlocksCount" style="color: #ec4899;">38</div>
+          </div>
+          <div class="stat-card-item">
+            <div class="stat-card-title">Razorpay Revenue</div>
+            <div class="stat-card-value" id="adminRevenueTotal" style="color: var(--accent-lime);">₹3,200</div>
+          </div>
+        </div>
+
+        <!-- Worker KYC Verification & User Management Table -->
+        <div style="margin-top: 32px;">
+          <h3 style="font-size: 1.2rem; margin-bottom: 16px;">👥 Worker KYC Verification & Trust Management</h3>
+          <div style="overflow-x: auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Name & Contact</th>
+                  <th>Role</th>
+                  <th>Primary Skill / Industry</th>
+                  <th>Location</th>
+                  <th>KYC Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminUserTableBody">
+                <tr>
+                  <td><strong>Rahul Nair</strong><br><small>+91 98470 12345</small></td>
+                  <td><span class="kyc-badge verified">Job Seeker</span></td>
+                  <td>Catering & Event Support</td>
+                  <td>Ernakulam / Kochi</td>
+                  <td><span class="kyc-badge verified">Verified ✅</span></td>
+                  <td><button class="btn btn-secondary btn-sm" onclick="window.toggleUserKYC('u1')">Toggle KYC</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Margin Free Supermarket</strong><br><small>+91 98950 44332</small></td>
+                  <td><span class="kyc-badge unverified">Employer</span></td>
+                  <td>Retail & Supermarket Ops</td>
+                  <td>Kozhikode</td>
+                  <td><span class="kyc-badge verified">Verified ✅</span></td>
+                  <td><button class="btn btn-secondary btn-sm" onclick="window.toggleUserKYC('u2')">Toggle KYC</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Contact Unlocks & Razorpay Audit Log -->
+        <div style="margin-top: 40px;">
+          <h3 style="font-size: 1.2rem; margin-bottom: 16px;">💳 Recent Contact Unlocks & Razorpay Transactions</h3>
+          <div style="overflow-x: auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Transaction ID</th>
+                  <th>User / Role</th>
+                  <th>Target Unlocked</th>
+                  <th>Type</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Timestamp</th>
+                </tr>
+              </thead>
+              <tbody id="adminAuditTableBody">
+                <tr>
+                  <td><code>PAY-KRWX-98421</code></td>
+                  <td>Rahul Nair (Seeker)</td>
+                  <td>Grand Spice Catering (+91 94471...)</td>
+                  <td><span class="kyc-badge verified">Free Quota</span></td>
+                  <td>₹0</td>
+                  <td><span class="kyc-badge verified">SUCCESS</span></td>
+                  <td>Just now</td>
+                </tr>
+                <tr>
+                  <td><code>pay_Pz92381Krewx</code></td>
+                  <td>Supermarket Manager (Employer)</td>
+                  <td>Anil Kumar (+91 97451...)</td>
+                  <td><span class="kyc-badge unverified">Razorpay Pay</span></td>
+                  <td>₹100</td>
+                  <td><span class="kyc-badge verified">PAID ✅</span></td>
+                  <td>10 mins ago</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       Section 7 — Trust / Brand Story
+       ========================================================================= -->
+  <section class="story-section" id="brand-story">
+    <div class="container">
+      <div class="story-box fade-up">
+        <span class="section-tag">Brand Story</span>
+        <h2 class="section-title">Built for Real Workplace Needs</h2>
+        <p class="story-text">
+          Operations run on dependable people. Whether it's keeping a commercial facility pristine, serving guests at an
+          event, or moving goods in a warehouse, businesses thrive when the right hands are in place. <strong>Krewx was
+            founded to strip away workforce complexity</strong> — connecting organizations directly with reliable crew
+          members when and where they are needed most.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       Section 8 — Final CTA & Footer
+       ========================================================================= -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-box fade-up">
+        <h2 class="cta-title">Need a Crew?</h2>
+        <p class="cta-subtitle">Let’s get the work moving.</p>
+
+        <div class="cta-buttons">
+          <button class="btn btn-primary btn-lg" data-modal-target="bookingModal">
+            <span>Book a Crew</span>
+            <svg class="arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+
+          <button class="btn btn-secondary btn-lg" data-modal-target="contactModal">
+            <span>Contact Us</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="brand-logo footer-brand-logo" aria-label="Krewx Home">
+            <img src="assets/images/krewx-logo-header-white.png" alt="Krewx — Your Crew, On Demand"
+              class="brand-logo-img">
+          </a>
+          <p class="footer-tagline">Your Crew, On Demand. Connecting organizations with dependable workforce support.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Services</h4>
+          <ul class="footer-links">
+            <li><a href="#services" data-modal-target="bookingModal" data-category="Housekeeping">Housekeeping</a></li>
+            <li><a href="#services" data-modal-target="bookingModal" data-category="Catering & Events">Catering &
+                Events</a></li>
+            <li><a href="#services" data-modal-target="bookingModal" data-category="Warehouse & Operations">Warehouse &
+                Operations</a></li>
+            <li><a href="#services" data-modal-target="bookingModal" data-category="On-Demand Workforce">On-Demand
+                Workforce</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#why-krewx">Why Krewx</a></li>
+            <li><a href="#for-businesses">For Businesses</a></li>
+            <li><a href="#for-crew">Join Krewx</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Contact & Support</h4>
+          <ul class="footer-links">
+            <li><a href="#" data-modal-target="contactModal">Contact Support</a></li>
+            <li><a href="#" data-modal-target="bookingModal">Book a Crew</a></li>
+            <li><a href="#" data-modal-target="workerModal">Worker Registration</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 Krewx Technologies Inc. All rights reserved. <span
+            style="margin: 0 8px; opacity: 0.4;">•</span> Generated by <strong
+            style="color: var(--accent-lime); font-weight: 700;">Kore</strong></div>
+
+        <div class="social-links">
+          <a href="#" class="social-link" aria-label="LinkedIn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+              <rect x="2" y="9" width="4" height="12"></rect>
+              <circle cx="4" cy="4" r="2"></circle>
+            </svg>
+          </a>
+          <a href="#" class="social-link" aria-label="Twitter / X">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path
+                d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z">
+              </path>
+            </svg>
+          </a>
+          <a href="#" class="social-link" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       MODAL 1: Book a Crew Interactive Wizard
+       ========================================================================= -->
+  <div class="modal-overlay" id="bookingModal">
+    <div class="modal-card">
+      <button class="modal-close-btn" data-modal-close aria-label="Close modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="modal-header">
+        <h3 class="modal-title">Book a Crew</h3>
+        <p class="modal-subtitle">Tell us about your shift requirements and get verified people on site.</p>
+      </div>
+
+      <form id="bookingForm">
+        <!-- Step 1: Service & Quantity -->
+        <div class="form-step" id="step1">
+          <div class="form-group">
+            <label class="form-label">Service Category *</label>
+            <select class="form-control" name="category" required>
+              <option value="">Select category...</option>
+              <option value="Housekeeping">Housekeeping & Facility Care</option>
+              <option value="Catering & Events">Catering & Events Support</option>
+              <option value="Warehouse & Operations">Warehouse & Operations</option>
+              <option value="Retail & Shop Staff">Retail & Local Shop Staff</option>
+              <option value="Drivers & Transport">Drivers & Transport Support</option>
+              <option value="On-Demand Workforce">On-Demand Flexible Staffing</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Number of Workers Required *</label>
+            <select class="form-control" name="workersCount" required>
+              <option value="1-3">1 – 3 Crew Members</option>
+              <option value="4-10">4 – 10 Crew Members</option>
+              <option value="10+">10+ Crew Members (Enterprise)</option>
+            </select>
+          </div>
+
+          <div style="text-align: right; margin-top: 24px;">
+            <button type="button" class="btn btn-primary" data-step-next="step2">
+              <span>Next: Schedule & Location</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2: Schedule & Details -->
+        <div class="form-step" id="step2" style="display: none;">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Shift Start Date *</label>
+              <input type="date" class="form-control" name="startDate" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Shift Duration *</label>
+              <select class="form-control" name="duration" required>
+                <option value="Single Shift (8 Hrs)">Single Shift (8 Hrs)</option>
+                <option value="Multi-day Project">Multi-day Project</option>
+                <option value="Ongoing Weekly Support">Ongoing Weekly Support</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Worksite Location *</label>
+            <input type="text" class="form-control" placeholder="City or Site Address" name="location" required>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; margin-top: 24px;">
+            <button type="button" class="btn btn-secondary" data-step-prev="step1">Back</button>
+            <button type="button" class="btn btn-primary" data-step-next="step3">Next: Contact Info</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Contact & Submit -->
+        <div class="form-step" id="step3" style="display: none;">
+          <div class="form-group">
+            <label class="form-label">Organization / Business Name *</label>
+            <input type="text" class="form-control" placeholder="Acme Logistics Ltd." name="companyName" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Contact Name *</label>
+              <input type="text" class="form-control" placeholder="John Doe" name="contactName" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Work Phone / Email *</label>
+              <input type="text" class="form-control" placeholder="john@company.com" name="contactDetail" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Specific Instructions (Optional)</label>
+            <textarea class="form-control" placeholder="Any special dress codes, safety gear, or shift details..."
+              name="notes"></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; margin-top: 24px;">
+            <button type="button" class="btn btn-secondary" data-step-prev="step2">Back</button>
+            <button type="submit" class="btn btn-primary">Submit Crew Request</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 2: Join Krewx Worker Application
+       ========================================================================= -->
+  <div class="modal-overlay" id="workerModal">
+    <div class="modal-card">
+      <button class="modal-close-btn" data-modal-close aria-label="Close modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="modal-header">
+        <h3 class="modal-title">Join Krewx</h3>
+        <p class="modal-subtitle">Apply to become part of the on-demand worker team.</p>
+      </div>
+
+      <form id="workerForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <input type="text" class="form-control" placeholder="Alex Morgan" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number *</label>
+            <input type="tel" class="form-control" placeholder="+1 (555) 000-0000" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Primary Skill Area *</label>
+          <select class="form-control" required>
+            <option value="">Select your main experience...</option>
+            <option value="housekeeping">Housekeeping & Cleaning</option>
+            <option value="catering">Catering & Event Service</option>
+            <option value="warehouse">Warehouse & Packing</option>
+            <option value="retail">Retail & Store Counter Staff</option>
+            <option value="driver">Driver (Personal & Commercial)</option>
+            <option value="general">General Operations Support</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">City / Region *</label>
+          <input type="text" class="form-control" id="workerCity" placeholder="Your City" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Upload ID / Resume Document (Optional — Uploads to Firebase Storage)</label>
+          <input type="file" class="form-control" id="workerDocFile" accept="image/*,.pdf,.doc,.docx">
+        </div>
+
+        <div style="text-align: right; margin-top: 24px;">
+          <button type="submit" class="btn btn-primary">Submit Application</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 3: Contact Us Inquiry
+       ========================================================================= -->
+  <div class="modal-overlay" id="contactModal">
+    <div class="modal-card">
+      <button class="modal-close-btn" data-modal-close aria-label="Close modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="modal-header">
+        <h3 class="modal-title">Contact Krewx</h3>
+        <p class="modal-subtitle">Have questions? Send us a message and our team will respond quickly.</p>
+      </div>
+
+      <form id="contactForm">
+        <div class="form-group">
+          <label class="form-label">Your Name *</label>
+          <input type="text" class="form-control" placeholder="Full Name" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email / Phone *</label>
+          <input type="text" class="form-control" placeholder="Email or Phone" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Message *</label>
+          <textarea class="form-control" placeholder="How can we help you?" required></textarea>
+        </div>
+
+        <div style="text-align: right; margin-top: 24px;">
+          <button type="submit" class="btn btn-primary">Send Message</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 4: User Authentication & Role Selector Modal
+       ========================================================================= -->
+  <div class="modal-overlay" id="roleModal">
+    <div class="modal-card" style="max-width: 520px;">
+      <button class="modal-close-btn" data-modal-close aria-label="Close modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="modal-header" style="text-align: center;">
+        <h3 class="modal-title">Account Auth & Role Selector</h3>
+        <p class="modal-subtitle">Sign in with Firebase or select your active platform role</p>
+      </div>
+
+      <!-- Firebase Email/Password Authentication Section -->
+      <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-medium); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 20px;">
+        <div id="firebaseAuthStatus" style="font-size: 0.85rem; margin-bottom: 10px; color: var(--text-secondary); text-align: center;">
+          🔥 Firebase Auth Status: <strong id="authStatusText">Not Signed In</strong>
+        </div>
+
+        <form id="firebaseAuthForm" style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <input type="email" class="form-control" id="authEmail" placeholder="Email address (e.g. user@krewx.com)" required style="padding: 10px 14px;">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <input type="password" class="form-control" id="authPassword" placeholder="Password (6+ characters)" required style="padding: 10px 14px;">
+          </div>
+          <div style="display: flex; gap: 10px; margin-top: 4px;">
+            <button type="button" class="btn btn-secondary btn-sm" style="flex: 1;" id="authLoginBtn">
+              🔑 Sign In
+            </button>
+            <button type="button" class="btn btn-primary btn-sm" style="flex: 1;" id="authRegisterBtn">
+              ✨ Create Account
+            </button>
+          </div>
+        </form>
+        <div id="authLoggedInActions" style="display: none; text-align: center; margin-top: 10px;">
+          <span style="font-size: 0.88rem; color: #10b981; font-weight: 600;" id="userEmailDisplay"></span>
+          <button class="btn btn-secondary btn-sm" id="authSignOutBtn" style="margin-left: 10px; padding: 4px 10px;">Sign Out</button>
+        </div>
+      </div>
+
+      <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 8px;">
+        Platform Role Selector
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 20px;">
+        <!-- Role 1: Job Seeker -->
+        <div style="background: var(--bg-card); border: 2px solid var(--border-medium); border-radius: var(--radius-lg); padding: 20px; cursor: pointer; transition: all 0.2s;" id="selectRoleSeeker" onclick="window.setPlatformRole('seeker')">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-weight: 800; font-size: 1.1rem; color: #38bdf8;">👨‍🔧 Job Seeker / Worker</div>
+            <span class="quota-badge">5 Free Unlocks</span>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 8px;">
+            Find daily shift work or permanent jobs in catering, retail, drivers, housekeeping, or logistics. Unlock employer contacts to get hired directly.
+          </p>
+        </div>
+
+        <!-- Role 2: Employer -->
+        <div style="background: var(--bg-card); border: 2px solid var(--border-medium); border-radius: var(--radius-lg); padding: 20px; cursor: pointer; transition: all 0.2s;" id="selectRoleEmployer" onclick="window.setPlatformRole('employer')">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-weight: 800; font-size: 1.1rem; color: #f59e0b;">🏢 Business / Employer</div>
+            <span class="quota-badge warning">2 Free Unlocks</span>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 8px;">
+            Post job requirements or browse available workers. Unlock vetted candidate phone numbers to hire instantly.
+          </p>
+        </div>
+
+        <!-- Role 3: Admin -->
+        <div style="background: var(--bg-card); border: 1px dashed rgba(168, 85, 247, 0.4); border-radius: var(--radius-lg); padding: 16px; cursor: pointer; text-align: center;" onclick="window.setPlatformRole('admin')">
+          <span style="color: #c084fc; font-weight: 700; font-size: 0.9rem;">🔐 Switch to Admin Ops Mode</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 5: Razorpay Contact Unlock Payment Checkout Modal
+       ========================================================================= -->
+  <div class="modal-overlay" id="razorpayModal">
+    <div class="razorpay-card">
+      <button class="modal-close-btn" data-modal-close aria-label="Close modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="razorpay-header">
+        <div class="razorpay-logo">Razorpay <span>Checkout</span></div>
+        <p style="color: #94a3b8; font-size: 0.85rem; margin-top: 4px;">Krewx Platform — Pay-to-Unlock Contact Pass</p>
+        <div class="razorpay-price">₹100</div>
+        <span style="font-size: 0.8rem; color: #10b981; background: rgba(16, 185, 129, 0.15); padding: 4px 12px; border-radius: 99px; font-weight: 700;">100% Secured Payment</span>
+      </div>
+
+      <div style="background: #1e293b; border-radius: var(--radius-md); padding: 14px; margin-bottom: 20px; font-size: 0.88rem; color: #cbd5e1;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <span>Item:</span>
+          <strong id="razorpayTargetTitle">Contact Unlock Pass</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span>Unlock Quota:</span>
+          <strong>1 Contact Number Reveal</strong>
+        </div>
+      </div>
+
+      <div style="font-size: 0.82rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">Select Payment Method</div>
+
+      <div class="payment-options-grid">
+        <button class="pay-option-btn" onclick="window.triggerRazorpayPayment('upi')">
+          <span style="font-size: 1.4rem;">📱</span>
+          <span>UPI / GPay / PhonePe</span>
+        </button>
+        <button class="pay-option-btn" onclick="window.triggerRazorpayPayment('card')">
+          <span style="font-size: 1.4rem;">💳</span>
+          <span>Debit / Credit Card</span>
+        </button>
+      </div>
+
+      <button class="btn btn-primary btn-full" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); font-size: 1rem; padding: 14px;" id="payRazorpaySubmitBtn" onclick="window.triggerRazorpayPayment('instant')">
+        <span>Pay ₹100 via Razorpay &rarr;</span>
+      </button>
+
+      <p style="text-align: center; font-size: 0.75rem; color: #64748b; margin-top: 14px;">
+        🔒 Encrypted by Razorpay Security Standards. Immediate unlock guaranteed upon payment.
+      </p>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 6: Rate & Review Modal
+       ========================================================================= -->
+  <div class="modal-overlay" id="ratingModal">
+    <div class="modal-card" style="max-width: 460px;">
+      <button class="modal-close-btn" data-modal-close aria-label="Close modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="modal-header" style="text-align: center;">
+        <h3 class="modal-title">Rate & Review Work Experience</h3>
+        <p class="modal-subtitle" id="ratingTargetName">Share feedback to help build trust on Krewx</p>
+      </div>
+
+      <form id="ratingForm">
+        <div style="text-align: center; margin: 20px 0;">
+          <div class="rating-stars" style="justify-content: center; font-size: 2rem; cursor: pointer;" id="starPicker">
+            <span data-star="1">★</span>
+            <span data-star="2">★</span>
+            <span data-star="3">★</span>
+            <span data-star="4">★</span>
+            <span data-star="5" style="color: #64748b;">★</span>
+          </div>
+          <input type="hidden" name="ratingValue" id="ratingValue" value="4">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Review Comment *</label>
+          <textarea class="form-control" name="reviewComment" placeholder="Prompt payout, polite staff, punctual on shift..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full">Submit Feedback</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="krewx-toast-container" id="toastContainer"></div>
+
+  <!-- Firebase Initializer & Verification Handler (Supports both http:// and file:// protocols) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+
+  <script>
+    const firebaseDefaultConfig = {
+      apiKey: "AIzaSyCpWV4NZAK7PhnqYq60Dq7jSjS-I1cKEyg",
+      authDomain: "krewx-d6100.firebaseapp.com",
+      projectId: "krewx-d6100",
+      storageBucket: "krewx-d6100.firebasestorage.app",
+      messagingSenderId: "765273715163",
+      appId: "1:765273715163:web:8d67d2aeefe3ebb2cc77fe",
+      measurementId: "G-YC96PCQG3C"
+    };
+
+    if (typeof firebase !== 'undefined' && (!firebase.apps || !firebase.apps.length)) {
+      try {
+        firebase.initializeApp(firebaseDefaultConfig);
+        console.log("🔥 Firebase Compat SDK initialized for project: krewx-d6100");
+      } catch (err) {
+        console.warn("Firebase Compat init note:", err);
+      }
+    }
+
+    function verifyFirebase() {
+      console.log("🔍 Running Krewx Firebase Verification Test...");
+      const report = {
+        projectId: "krewx-d6100",
+        appInitialized: false,
+        authInitialized: false,
+        firestoreInitialized: false,
+        storageInitialized: false,
+        currentUser: 'Not signed in',
+        status: 'TESTING'
+      };
+
+      try {
+        if (window.krewxFirebase) {
+          report.appInitialized = !!window.krewxFirebase.app;
+          report.authInitialized = !!window.krewxFirebase.auth;
+          report.firestoreInitialized = !!window.krewxFirebase.db;
+          report.storageInitialized = !!window.krewxFirebase.storage;
+          if (window.krewxFirebase.auth && window.krewxFirebase.auth.currentUser) {
+            report.currentUser = window.krewxFirebase.auth.currentUser.email;
+          }
+        } else if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length) {
+          report.appInitialized = true;
+          report.authInitialized = !!firebase.auth();
+          report.firestoreInitialized = !!firebase.firestore();
+          report.storageInitialized = !!firebase.storage();
+          if (firebase.auth().currentUser) {
+            report.currentUser = firebase.auth().currentUser.email;
+          }
+        }
+
+        report.status = (report.appInitialized && report.authInitialized && report.firestoreInitialized && report.storageInitialized) 
+          ? 'READY' 
+          : 'ERROR';
+      } catch (err) {
+        report.status = 'ERROR';
+        report.error = err.message;
+      }
+
+      console.group("🔥 Krewx Firebase Verification Report");
+      console.log("Project ID:", report.projectId);
+      console.log("Firebase App Status:", report.appInitialized ? "✅ Initialized" : "❌ Failed");
+      console.log("Firebase Auth Status:", report.authInitialized ? "✅ Initialized (Email/Password ready)" : "❌ Failed");
+      console.log("Cloud Firestore Status:", report.firestoreInitialized ? "✅ Initialized" : "❌ Failed");
+      console.log("Firebase Storage Status:", report.storageInitialized ? "✅ Initialized (krewx-d6100.firebasestorage.app)" : "❌ Failed");
+      console.log("Current Auth User:", report.currentUser);
+      console.log("Overall Status:", report.status);
+      console.groupEnd();
+
+      return report;
+    }
+
+    // Attach to global window object under multiple aliases for convenience
+    window.verifyFirebase = verifyFirebase;
+    window.krewxVerifyFirebase = verifyFirebase;
+  </script>
+
+  <!-- Firebase Modular ESM Configuration & Services -->
+  <script type="module" src="js/firebase-config.js"></script>
+
+  <!-- Main Application JS Module -->
+  <script type="module" src="js/main.js"></script>
+</body>
+
+</html>
