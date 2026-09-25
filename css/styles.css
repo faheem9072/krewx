@@ -7,34 +7,34 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap');
 
 /* --------------------------------------------------------------------------
-   1. Design Tokens & CSS Variables (Option 2: Deep Slate & Warm Copper)
+   1. Design Tokens & CSS Variables (Logo-Matched Palette: #93C73E)
    -------------------------------------------------------------------------- */
 :root {
   /* Colors */
-  --bg-dark: #0D1117;
-  --bg-primary: #121720;
-  --bg-secondary: #161B22;
-  --bg-card: #1C212A;
-  --bg-card-hover: #252C37;
-  --bg-glass: rgba(22, 27, 34, 0.85);
+  --bg-dark: #0A0D12;
+  --bg-primary: #0F131A;
+  --bg-secondary: #141923;
+  --bg-card: #1A202C;
+  --bg-card-hover: #222938;
+  --bg-glass: rgba(20, 25, 35, 0.85);
   
   --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-medium: rgba(224, 109, 83, 0.22);
-  --border-accent: rgba(224, 109, 83, 0.45);
-  --border-lime: rgba(224, 109, 83, 0.35);
+  --border-medium: rgba(147, 199, 62, 0.25);
+  --border-accent: rgba(147, 199, 62, 0.45);
+  --border-lime: rgba(147, 199, 62, 0.35);
   
-  /* Brand Accent - Warm Copper & Rust */
-  --accent-copper: #E06D53;
-  --accent-copper-hover: #EC7A61;
-  --accent-copper-dark: #C4553B;
-  --accent-copper-dim: rgba(224, 109, 83, 0.14);
-  --accent-copper-glow: rgba(224, 109, 83, 0.28);
+  /* Master Brand Accent - Matched to Logo (#93C73E) */
+  --accent-lime: #93C73E;
+  --accent-lime-hover: #A2D847;
+  --accent-lime-dark: #7CAA33;
+  --accent-lime-dim: rgba(147, 199, 62, 0.14);
+  --accent-lime-glow: rgba(147, 199, 62, 0.3);
   
-  --accent-lime: #E06D53;
-  --accent-lime-hover: #EC7A61;
-  --accent-lime-dark: #C4553B;
-  --accent-lime-dim: rgba(224, 109, 83, 0.14);
-  --accent-lime-glow: rgba(224, 109, 83, 0.28);
+  --accent-copper: #93C73E;
+  --accent-copper-hover: #A2D847;
+  --accent-copper-dark: #7CAA33;
+  --accent-copper-dim: rgba(147, 199, 62, 0.14);
+  --accent-copper-glow: rgba(147, 199, 62, 0.3);
   
   --accent-gold: #F59E0B;
   --accent-amber: #F59E0B;
@@ -43,7 +43,7 @@
   --text-primary: #F8FAFC;
   --text-secondary: #94A3B8;
   --text-muted: #64748B;
-  --text-inverse: #0D1117;
+  --text-inverse: #0A0D12;
   
   /* Typography Fonts */
   --font-sans: 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -60,13 +60,13 @@
   /* Shadows & Glows */
   --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.35);
   --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.5);
-  --shadow-lime: 0 8px 30px rgba(224, 109, 83, 0.3);
-  --shadow-copper: 0 8px 30px rgba(224, 109, 83, 0.3);
+  --shadow-lime: 0 8px 30px rgba(147, 199, 62, 0.3);
+  --shadow-copper: 0 8px 30px rgba(147, 199, 62, 0.3);
   
   /* Transitions */
   --transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-normal: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-slow: 0.6s cubic-bezier(0.6, 1, 0.3, 1);
+  --transition-slow: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* --------------------------------------------------------------------------
@@ -302,12 +302,12 @@ button, input, select, textarea {
   object-fit: contain;
   display: block;
   transition: transform var(--transition-fast), filter var(--transition-fast);
-  filter: drop-shadow(0 0 12px rgba(224, 109, 83, 0.4));
+  filter: drop-shadow(0 0 12px rgba(147, 199, 62, 0.45));
 }
 
 .brand-logo:hover .brand-logo-img {
   transform: translateY(-1px) scale(1.04);
-  filter: drop-shadow(0 0 20px rgba(224, 109, 83, 0.7));
+  filter: drop-shadow(0 0 20px rgba(147, 199, 62, 0.75));
 }
 
 .header-logo-badge,
@@ -326,8 +326,8 @@ button, input, select, textarea {
 .brand-logo:hover .header-logo-badge,
 .footer-brand-logo:hover .logo-artboard-badge {
   transform: translateY(-1px) scale(1.03);
-  border-color: var(--accent-copper);
-  box-shadow: 0 6px 24px rgba(224, 109, 83, 0.45), 0 0 0 2px var(--accent-copper);
+  border-color: var(--accent-lime);
+  box-shadow: 0 6px 24px rgba(147, 199, 62, 0.45), 0 0 0 2px var(--accent-lime);
 }
 
 .brand-logo-artboard {
@@ -469,7 +469,7 @@ button, input, select, textarea {
   padding-bottom: 90px;
   position: relative;
   overflow: hidden;
-  background: radial-gradient(circle at 75% 25%, rgba(224, 109, 83, 0.14) 0%, transparent 65%),
+  background: radial-gradient(circle at 75% 25%, rgba(147, 199, 62, 0.14) 0%, transparent 65%),
               radial-gradient(circle at 20% 75%, rgba(245, 158, 11, 0.08) 0%, transparent 50%),
               var(--bg-dark);
 }
@@ -563,7 +563,7 @@ button, input, select, textarea {
   border-radius: var(--radius-xl);
   overflow: hidden;
   border: 1px solid var(--border-medium);
-  box-shadow: var(--shadow-card), 0 0 60px rgba(224, 109, 83, 0.15);
+  box-shadow: var(--shadow-card), 0 0 60px rgba(147, 199, 62, 0.15);
 }
 
 .hero-image-wrapper img {
