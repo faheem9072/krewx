@@ -53,27 +53,25 @@
       </div>
 
       <nav class="nav-links" id="navLinks">
+        <a href="#marketplace" class="nav-link" id="navFindWorkBtn">Find Work</a>
+        <a href="#marketplace" class="nav-link" id="navFindWorkersBtn">Find Workers</a>
         <a href="#services" class="nav-link">Services</a>
-        <a href="#marketplace" class="nav-link">Live Jobs</a>
-        <a href="#admin-panel" class="nav-link" id="adminNavLink">Admin Panel</a>
         <a href="#how-it-works" class="nav-link">How It Works</a>
+        <a href="#admin-panel" class="nav-link" id="adminNavLink">Admin Panel</a>
         
-        <!-- User Quota & Role Badge -->
+        <!-- User Status Pill -->
         <div class="user-header-status">
-          <button class="role-switch-btn" id="roleSwitchBtn" title="Click to switch between Job Seeker and Employer role">
-            <span id="roleLabel">Role: Job Seeker</span>
-            <i class="fa-solid fa-arrows-rotate"></i>
+          <button class="role-switch-btn" id="roleSwitchBtn" title="Your Krewx Account">
+            <span id="roleLabel">Sign In / Register</span>
+            <i class="fa-solid fa-user"></i>
           </button>
-          <span class="quota-badge" id="userQuotaBadge">
+          <span class="quota-badge" id="userQuotaBadge" style="display: none;">
             <i class="fa-solid fa-bolt"></i>
-            <span id="quotaCountText">5 Free Unlocks Left</span>
+            <span id="quotaCountText"></span>
           </span>
         </div>
 
-        <button class="btn btn-secondary btn-sm" data-modal-target="roleModal">
-          <span>Auth & Role</span>
-        </button>
-        <button class="btn btn-primary btn-sm" data-modal-target="bookingModal">
+        <button class="btn btn-primary btn-sm" data-modal-target="postJobModal">
           <span>Post a Job &rarr;</span>
         </button>
       </nav>
@@ -96,22 +94,21 @@
       <div class="hero-content fade-up">
         <div class="badge">
           <span class="badge-dot"></span>
-          <span>On-Demand Workforce Platform</span>
+          <span>Simple Workforce Platform</span>
         </div>
 
         <h1 class="hero-title">
-          Reliable Crews. <br>
-          <span class="highlight">On Demand.</span>
+          Connecting People Looking for Work <br>
+          <span class="highlight">With Businesses Looking for Workers.</span>
         </h1>
 
         <p class="hero-subtitle">
-          Connect with dependable people for the work that keeps your business moving — or join our active crew network
-          for flexible shift opportunities.
+          Krewx connects people looking for work with businesses looking for workers. Browse active shift openings or post your workforce requirements instantly with zero friction.
         </p>
 
         <div class="hero-ctas">
-          <button class="btn btn-primary btn-lg" data-modal-target="bookingModal">
-            <span>Book a Crew</span>
+          <button class="btn btn-primary btn-lg" id="heroFindWorkBtn">
+            <span>Find Work</span>
             <svg class="arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
               stroke-width="2.5">
               <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -119,8 +116,8 @@
             </svg>
           </button>
 
-          <button class="btn btn-secondary btn-lg" data-modal-target="workerModal">
-            <span>Find Work & Join Crew</span>
+          <button class="btn btn-secondary btn-lg" id="heroFindWorkersBtn">
+            <span>Find Workers</span>
           </button>
         </div>
 
@@ -129,7 +126,7 @@
             <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
             </svg>
-            <span class="trust-text">Verified Support Personnel</span>
+            <span class="trust-text">Verified Local Workers & Jobs</span>
           </div>
 
           <div class="trust-item">
@@ -137,7 +134,7 @@
               <circle cx="12" cy="12" r="10"></circle>
               <polyline points="12 6 12 12 16 14"></polyline>
             </svg>
-            <span class="trust-text">Rapid Dispatch & Response</span>
+            <span class="trust-text">Instant OTP Sign-In</span>
           </div>
         </div>
       </div>
@@ -151,8 +148,8 @@
             <div class="hero-status">
               <span class="status-indicator"></span>
               <div>
-                <div class="status-title">Active Crews Ready</div>
-                <div class="status-desc">Facility, Logistics, Hospitality & Events</div>
+                <div class="status-title">Active Platform Jobs</div>
+                <div class="status-desc">Catering, Retail, Drivers, Logistics & Housekeeping</div>
               </div>
             </div>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-copper)" stroke-width="2">
@@ -1086,6 +1083,308 @@
       </div>
     </div>
   </footer>
+
+  <!-- =========================================================================
+       MODAL 0.1: Simple 4-Step Mobile OTP Registration & Auth
+       ========================================================================= -->
+  <div class="modal-overlay" id="quickAuthModal">
+    <div class="modal-card" style="max-width: 480px;">
+      <button class="modal-close-btn" data-modal-close aria-label="Close modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Progress Indicator -->
+      <div class="reg-progress-bar">
+        <div class="reg-progress-step active" id="progStep1">1</div>
+        <div class="reg-progress-line" id="progLine1"></div>
+        <div class="reg-progress-step" id="progStep2">2</div>
+        <div class="reg-progress-line" id="progLine2"></div>
+        <div class="reg-progress-step" id="progStep3">3</div>
+        <div class="reg-progress-line" id="progLine3"></div>
+        <div class="reg-progress-step" id="progStep4">4</div>
+      </div>
+
+      <!-- Step 1: Mobile Number -->
+      <div class="reg-step-content" id="regStep1">
+        <div class="modal-header text-center" style="text-align: center;">
+          <h3 class="modal-title">Enter Mobile Number</h3>
+          <p class="modal-subtitle">We will send a quick verification OTP code to your phone</p>
+        </div>
+        <form id="mobileStepForm">
+          <div class="form-group">
+            <label class="form-label">Mobile Phone Number *</label>
+            <div class="input-phone-group">
+              <span class="phone-prefix">+91</span>
+              <input type="tel" class="form-control phone-input" id="regMobileInput" placeholder="98470 12345" required pattern="[0-9]{10}" maxlength="10">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full btn-lg">
+            <span>Send OTP &rarr;</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Step 2: OTP Verification -->
+      <div class="reg-step-content" id="regStep2" style="display: none;">
+        <div class="modal-header text-center" style="text-align: center;">
+          <h3 class="modal-title">Verify OTP</h3>
+          <p class="modal-subtitle">Enter 4-digit code sent to <strong id="sentMobileDisplay">+91 98470 12345</strong></p>
+        </div>
+        <form id="otpStepForm">
+          <div class="form-group">
+            <label class="form-label">Verification Code (OTP) *</label>
+            <input type="text" class="form-control otp-input" id="regOtpInput" placeholder="1234" required maxlength="6" style="text-align: center; font-size: 1.5rem; letter-spacing: 0.3em; font-weight: 700;">
+            <div style="font-size: 0.8rem; color: var(--accent-lime); text-align: center; margin-top: 8px;">
+              💡 Demo Auto-OTP: <strong>1234</strong>
+            </div>
+          </div>
+          <div style="display: flex; gap: 12px;">
+            <button type="button" class="btn btn-secondary" id="backToMobileBtn">Back</button>
+            <button type="submit" class="btn btn-primary" style="flex: 1;">
+              <span>Verify OTP &rarr;</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 3: Name -->
+      <div class="reg-step-content" id="regStep3" style="display: none;">
+        <div class="modal-header text-center" style="text-align: center;">
+          <h3 class="modal-title">What is your Name?</h3>
+          <p class="modal-subtitle">Enter your name or business name to continue</p>
+        </div>
+        <form id="nameStepForm">
+          <div class="form-group">
+            <label class="form-label">Full Name / Business Name *</label>
+            <input type="text" class="form-control" id="regNameInput" placeholder="e.g. Rahul Nair or Grand Spice Events" required style="font-size: 1.05rem;">
+          </div>
+          <div style="display: flex; gap: 12px;">
+            <button type="button" class="btn btn-secondary" id="backToOtpBtn">Back</button>
+            <button type="submit" class="btn btn-primary" style="flex: 1;">
+              <span>Continue &rarr;</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 4: Role Selection -->
+      <div class="reg-step-content" id="regStep4" style="display: none;">
+        <div class="modal-header text-center" style="text-align: center;">
+          <h3 class="modal-title">How will you use Krewx?</h3>
+          <p class="modal-subtitle">Select your option to complete registration</p>
+        </div>
+        <div class="role-selection-grid">
+          <div class="role-choice-card active" id="roleChoiceSeeker" onclick="window.selectRegRole('seeker')">
+            <div class="role-choice-icon">👷</div>
+            <div class="role-choice-title">Looking for Work</div>
+            <div class="role-choice-desc">Apply for shifts & permanent jobs</div>
+          </div>
+
+          <div class="role-choice-card" id="roleChoiceEmployer" onclick="window.selectRegRole('employer')">
+            <div class="role-choice-icon">🏢</div>
+            <div class="role-choice-title">Need Workers</div>
+            <div class="role-choice-desc">Post jobs & hire verified workers</div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary btn-full btn-lg" id="completeRegBtn" style="margin-top: 20px;">
+          <span>Complete Registration &rarr;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 0.2: User Profile & Progressive Profile Completion
+       ========================================================================= -->
+  <div class="modal-overlay" id="userProfileModal">
+    <div class="modal-card" style="max-width: 520px;">
+      <button class="modal-close-btn" data-modal-close aria-label="Close modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="modal-header text-center" style="text-align: center;">
+        <h3 class="modal-title">Your Krewx Profile</h3>
+        <p class="modal-subtitle">Manage account & optional profile details</p>
+      </div>
+
+      <!-- Profile Header Summary -->
+      <div class="profile-card-summary">
+        <div class="profile-avatar-circle" id="profileAvatarInitial">K</div>
+        <div>
+          <h4 id="profileDisplayName" style="font-size: 1.15rem; font-weight: 700;">User Name</h4>
+          <div id="profileDisplayPhone" style="color: var(--text-secondary); font-size: 0.9rem;">+91 98470 12345</div>
+          <span class="badge" id="profileDisplayRole" style="margin-top: 6px; font-size: 0.75rem;">Job Seeker</span>
+        </div>
+      </div>
+
+      <!-- Progressive Profile Form -->
+      <div class="progressive-profile-box">
+        <div style="font-size: 0.95rem; font-weight: 700; color: var(--accent-lime); margin-bottom: 4px;">
+          ✨ Complete your profile to get better job matches (Optional)
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 16px;">
+          These optional details help employers find you faster. You can update them anytime.
+        </p>
+
+        <form id="progressiveProfileForm">
+          <div class="form-group">
+            <label class="form-label">Primary Skill Category (Optional)</label>
+            <select class="form-control" id="profSkill">
+              <option value="">Select skill...</option>
+              <option value="Catering & Events">Catering & Events Helper</option>
+              <option value="Retail & Shops">Retail & Supermarket Counter</option>
+              <option value="Warehouse & Operations">Warehouse & Packing</option>
+              <option value="Housekeeping">Housekeeping & Cleaning</option>
+              <option value="Drivers & Transport">Driver (LMV / Commercial)</option>
+              <option value="General Support">General Operations Support</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Experience Details (Optional)</label>
+            <input type="text" class="form-control" id="profExp" placeholder="e.g. 2 years catering experience">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">City / Location (Optional)</label>
+              <input type="text" class="form-control" id="profCity" placeholder="e.g. Ernakulam / Kochi">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Availability (Optional)</label>
+              <select class="form-control" id="profAvailability">
+                <option value="Immediate">Immediate / Ready Now</option>
+                <option value="Weekends Only">Weekends Only</option>
+                <option value="Full Time">Full-Time Monthly</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Add Resume Document (Optional)</label>
+            <input type="file" class="form-control" id="profResumeFile" accept=".pdf,.doc,.docx,image/*">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Add Profile Photo (Optional)</label>
+            <input type="file" class="form-control" id="profPhotoFile" accept="image/*">
+          </div>
+
+          <div style="display: flex; gap: 12px; margin-top: 20px;">
+            <button type="button" class="btn btn-secondary" id="signOutUserBtn">Sign Out</button>
+            <button type="submit" class="btn btn-primary" style="flex: 1;">Save Details</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 0.3: Easy 1-Click Job Application Modal
+       ========================================================================= -->
+  <div class="modal-overlay" id="applyJobModal">
+    <div class="modal-card" style="max-width: 480px;">
+      <button class="modal-close-btn" data-modal-close aria-label="Close modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="modal-header text-center" style="text-align: center;">
+        <span class="badge" style="margin-bottom: 8px;">Job Application</span>
+        <h3 class="modal-title" id="applyJobTitle">Apply for Job</h3>
+        <p class="modal-subtitle" id="applyJobSubhead">Employer will receive your contact details</p>
+      </div>
+
+      <form id="quickJobApplyForm">
+        <div style="background: var(--bg-secondary); border: 1px solid var(--border-medium); border-radius: var(--radius-md); padding: 16px; margin-bottom: 20px;">
+          <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px;">Applicant Contact Details:</div>
+          <div style="font-weight: 700; font-size: 1.05rem;" id="applyApplicantName">Rahul Nair</div>
+          <div style="color: var(--accent-lime); font-size: 0.9rem;" id="applyApplicantPhone">📞 +91 98470 12345</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Your Location / City (Optional)</label>
+          <input type="text" class="form-control" id="applyApplicantCity" placeholder="e.g. Kochi / Ernakulam">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full btn-lg">
+          <span>Submit Application &rarr;</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 0.4: Post a Job Requirement (Employer)
+       ========================================================================= -->
+  <div class="modal-overlay" id="postJobModal">
+    <div class="modal-card" style="max-width: 520px;">
+      <button class="modal-close-btn" data-modal-close aria-label="Close modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="modal-header">
+        <h3 class="modal-title">Post a Job Requirement</h3>
+        <p class="modal-subtitle">Connect with dependable workers in your area instantly.</p>
+      </div>
+
+      <form id="simplePostJobForm">
+        <div class="form-group">
+          <label class="form-label">Job Title / Requirement *</label>
+          <input type="text" class="form-control" id="postJobTitle" placeholder="e.g. Catering Helper Needed for Banquet" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Category *</label>
+            <select class="form-control" id="postJobCat" required>
+              <option value="Catering & Events">Catering & Events</option>
+              <option value="Retail & Shops">Retail & Supermarket</option>
+              <option value="Warehouse & Operations">Warehouse & Logistics</option>
+              <option value="Housekeeping">Housekeeping & Cleaning</option>
+              <option value="Drivers & Transport">Drivers & Transport</option>
+              <option value="General Support">General Support</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Workers Needed *</label>
+            <input type="number" class="form-control" id="postJobWorkers" placeholder="e.g. 4" min="1" required value="2">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Worksite Location *</label>
+            <input type="text" class="form-control" id="postJobLoc" placeholder="e.g. Ernakulam / Kochi" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Estimated Wage / Payout</label>
+            <input type="text" class="form-control" id="postJobWage" placeholder="e.g. ₹900 / Shift">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Specific Details / Requirements (Optional)</label>
+          <textarea class="form-control" id="postJobDesc" placeholder="Describe timing, shift rules, or requirements..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full btn-lg" style="margin-top: 10px;">
+          <span>Post Job Opening &rarr;</span>
+        </button>
+      </form>
+    </div>
+  </div>
 
   <!-- =========================================================================
        MODAL 1: Book a Crew Interactive Wizard

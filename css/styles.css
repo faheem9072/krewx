@@ -1947,77 +1947,173 @@ textarea.form-control {
   font-size: 1.8rem;
   font-weight: 800;
   color: var(--accent-lime);
+
+/* ==========================================================================
+   17. Simple 4-Step Mobile OTP Registration & Progressive Profile UI
+   ========================================================================== */
+.reg-progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 28px;
 }
 
-.admin-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 16px;
-  font-size: 0.88rem;
-}
-
-.admin-table th, .admin-table td {
-  padding: 12px 16px;
-  text-align: left;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.admin-table th {
+.reg-progress-step {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
   background: var(--bg-secondary);
-  color: var(--text-secondary);
-  font-weight: 600;
-}
-
-.kyc-badge {
-  padding: 4px 10px;
-  border-radius: var(--radius-pill);
-  font-size: 0.75rem;
+  border: 2px solid var(--border-medium);
+  color: var(--text-muted);
   font-weight: 700;
-}
-
-.kyc-badge.verified {
-  background: rgba(16, 185, 129, 0.15);
-  color: #10b981;
-}
-
-.kyc-badge.unverified {
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
-}
-
-/* Rating Stars */
-.rating-stars {
+  font-size: 0.85rem;
   display: flex;
-  gap: 4px;
-  color: #f59e0b;
-  font-size: 0.9rem;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
 }
 
-/* Toast Notifications */
-.krewx-toast-container {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 10000;
+.reg-progress-step.active {
+  background: var(--accent-lime-dim);
+  border-color: var(--accent-lime);
+  color: var(--accent-lime);
+  box-shadow: 0 0 12px var(--accent-lime-glow);
+}
+
+.reg-progress-step.completed {
+  background: var(--accent-lime);
+  border-color: var(--accent-lime);
+  color: #000000;
+}
+
+.reg-progress-line {
+  flex: 1;
+  max-width: 40px;
+  height: 2px;
+  background: var(--border-subtle);
+  transition: all var(--transition-fast);
+}
+
+.reg-progress-line.completed {
+  background: var(--accent-lime);
+}
+
+.input-phone-group {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
 }
 
-.krewx-toast {
-  background: var(--bg-card);
-  border: 1px solid var(--accent-lime);
-  color: #ffffff;
-  padding: 14px 20px;
-  border-radius: var(--radius-md);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-  font-size: 0.9rem;
-  font-weight: 600;
-  animation: slideInRight 0.3s ease-out;
+.input-phone-group:focus-within {
+  border-color: var(--accent-lime);
+  box-shadow: 0 0 0 3px rgba(147, 199, 62, 0.15);
 }
 
-@keyframes slideInRight {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+.phone-prefix {
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border-right: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.phone-input {
+  border: none !important;
+  box-shadow: none !important;
+  font-size: 1.15rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.05em;
+  padding: 14px 16px !important;
+  width: 100%;
+}
+
+.role-selection-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+@media (max-width: 500px) {
+  .role-selection-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.role-choice-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.role-choice-card:hover {
+  border-color: var(--border-lime);
+  transform: translateY(-2px);
+}
+
+.role-choice-card.active {
+  background: rgba(147, 199, 62, 0.08);
+  border-color: var(--accent-lime);
+  box-shadow: 0 0 20px rgba(147, 199, 62, 0.15);
+}
+
+.role-choice-icon {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.role-choice-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.role-choice-desc {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.profile-card-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.profile-avatar-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent-lime);
+  color: #000000;
+  font-weight: 800;
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 16px var(--accent-lime-glow);
+}
+
+.progressive-profile-box {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed var(--border-medium);
+  border-radius: var(--radius-lg);
+  padding: 20px;
 }
 

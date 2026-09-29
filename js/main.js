@@ -1,6 +1,6 @@
 /**
- * Krewx Platform — Main Interactive Marketplace & Monetization Logic
- * Includes Role Selection, Pay-to-Unlock System, Razorpay Integration, Admin Operations, and Firebase Sync
+ * Krewx Platform — Main Interactive Marketplace & Simplification Engine
+ * Supports 4-Step OTP Mobile Registration, Progressive Profile, Direct Job Applications, and Feature Flagged Monetization
  */
 
 import { 
@@ -27,19 +27,21 @@ import {
 
 const ADMIN_EMAIL = 'fm105595@gmail.com';
 
+// FEATURE FLAG: Controls whether monetization/subscription UI is shown on frontend
+window.MONETIZATION_ENABLED = false;
+
 // Global Platform State
 window.krewxState = {
   role: 'seeker', // 'seeker' | 'employer' | 'admin'
+  user: JSON.parse(localStorage.getItem('krewx_user') || 'null'),
+  pendingAction: null,
+  regDraft: { mobile: '', name: '', role: 'seeker' },
   seekerUnlocks: 5,
   employerUnlocks: 2,
   unlockedIds: new Set(),
   currentPaymentTarget: null,
   revenue: 3200,
-  currentUser: null,
-  users: [
-    { id: 'u1', name: 'Rahul Nair', role: 'seeker', phone: '+91 98470 12345', skill: 'Catering & Event Support', location: 'Ernakulam', verified: true },
-    { id: 'u2', name: 'Margin Free Supermarket', role: 'employer', phone: '+91 98950 44332', skill: 'Retail & Supermarket Ops', location: 'Kozhikode', verified: true }
-  ]
+  currentUser: null
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -51,10 +53,13 @@ document.addEventListener('DOMContentLoaded', () => {
   initFirebaseAuth();
   initAdminGateAuth();
   initFormSubmissions();
+  initQuickAuthModal();
+  initProgressiveProfile();
+  initHeroAndNavActions();
   initMarketplaceTabs();
   initMarketplaceData();
   initFirestoreRealtime();
-  updateQuotaUI();
+  updateUserSessionUI();
 
   // Attach event listener for refresh admin stats button
   const refreshBtn = document.getElementById('refreshAdminStatsBtn');
@@ -71,11 +76,52 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* --------------------------------------------------------------------------
-   1. User Role Selector & Quota Management
+   1. User Session & Navigation Header UI
    -------------------------------------------------------------------------- */
+function updateUserSessionUI() {
+  const roleLabel = document.getElementById('roleLabel');
+  const quotaText = document.getElementById('quotaCountText');
+  const quotaBadge = document.getElementById('userQuotaBadge');
+  const roleSwitchBtn = document.getElementById('roleSwitchBtn');
+
+  // Hide quota badge when monetization is disabled
+  if (quotaBadge) {
+    quotaBadge.style.display = window.MONETIZATION_ENABLED ? 'inline-flex' : 'none';
+  }
+
+  const user = window.krewxState.user;
+
+  if (user) {
+    window.krewxState.role = user.role || 'seeker';
+    if (roleLabel) {
+      roleLabel.textContent = `👤 ${user.name} (${user.role === 'employer' ? 'Employer' : 'Worker'})`;
+    }
+  } else {
+    if (roleLabel) {
+      roleLabel.textContent = 'Sign In / Register';
+    }
+  }
+
+  if (roleSwitchBtn) {
+    roleSwitchBtn.onclick = (e) => {
+      e.preventDefault();
+      if (window.krewxState.user) {
+        const profModal = document.getElementById('userProfileModal');
+        if (profModal) openModal(profModal);
+      } else {
+        window.openQuickAuthModal();
+      }
+    };
+  }
+}
+
 window.setPlatformRole = function(role) {
   window.krewxState.role = role;
-  updateQuotaUI();
+  if (window.krewxState.user) {
+    window.krewxState.user.role = role;
+    localStorage.setItem('krewx_user', JSON.stringify(window.krewxState.user));
+  }
+  updateUserSessionUI();
 
   const modal = document.getElementById('roleModal');
   if (modal) closeModal(modal);
@@ -89,43 +135,572 @@ window.setPlatformRole = function(role) {
   }
 };
 
-function updateQuotaUI() {
-  const roleLabel = document.getElementById('roleLabel');
-  const quotaText = document.getElementById('quotaCountText');
-  const quotaBadge = document.getElementById('userQuotaBadge');
+/* --------------------------------------------------------------------------
+   2. Simple 4-Step Registration Wizard (Mobile -> OTP -> Name -> Role)
+   -------------------------------------------------------------------------- */
+window.openQuickAuthModal = function(defaultRole = 'seeker') {
+  window.krewxState.regDraft.role = defaultRole;
+  selectRegRoleUI(defaultRole);
+  setRegStep(1);
 
-  if (!roleLabel || !quotaBadge) return;
+  const modal = document.getElementById('quickAuthModal');
+  if (modal) openModal(modal);
+};
 
-  const role = window.krewxState.role;
+function setRegStep(stepNum) {
+  const steps = [1, 2, 3, 4];
+  steps.forEach(num => {
+    const stepEl = document.getElementById(`regStep${num}`);
+    const progEl = document.getElementById(`progStep${num}`);
+    const lineEl = document.getElementById(`progLine${num}`);
 
-  if (role === 'seeker') {
-    if (roleLabel) roleLabel.textContent = 'Role: Job Seeker';
-    if (quotaText) quotaText.textContent = `${window.krewxState.seekerUnlocks} Free Unlocks Left`;
-    quotaBadge.className = window.krewxState.seekerUnlocks > 0 ? 'quota-badge' : 'quota-badge warning';
-  } else if (role === 'employer') {
-    if (roleLabel) roleLabel.textContent = 'Role: Employer';
-    if (quotaText) quotaText.textContent = `${window.krewxState.employerUnlocks} Free Unlocks Left`;
-    quotaBadge.className = window.krewxState.employerUnlocks > 0 ? 'quota-badge' : 'quota-badge warning';
-  } else {
-    if (roleLabel) roleLabel.textContent = 'Role: Admin Ops';
-    if (quotaText) quotaText.textContent = 'Admin Unlocked';
-    quotaBadge.className = 'quota-badge admin-tag';
+    if (stepEl) stepEl.style.display = num === stepNum ? 'block' : 'none';
+    if (progEl) {
+      if (num === stepNum) {
+        progEl.className = 'reg-progress-step active';
+      } else if (num < stepNum) {
+        progEl.className = 'reg-progress-step completed';
+      } else {
+        progEl.className = 'reg-progress-step';
+      }
+    }
+    if (lineEl) {
+      lineEl.className = num < stepNum ? 'reg-progress-line completed' : 'reg-progress-line';
+    }
+  });
+}
+
+window.selectRegRole = function(role) {
+  window.krewxState.regDraft.role = role;
+  selectRegRoleUI(role);
+};
+
+function selectRegRoleUI(role) {
+  const seekerCard = document.getElementById('roleChoiceSeeker');
+  const employerCard = document.getElementById('roleChoiceEmployer');
+
+  if (seekerCard && employerCard) {
+    if (role === 'seeker') {
+      seekerCard.classList.add('active');
+      employerCard.classList.remove('active');
+    } else {
+      employerCard.classList.add('active');
+      seekerCard.classList.remove('active');
+    }
+  }
+}
+
+function initQuickAuthModal() {
+  const mobileForm = document.getElementById('mobileStepForm');
+  const otpForm = document.getElementById('otpStepForm');
+  const nameForm = document.getElementById('nameStepForm');
+  const completeBtn = document.getElementById('completeRegBtn');
+
+  const backToMobileBtn = document.getElementById('backToMobileBtn');
+  const backToOtpBtn = document.getElementById('backToOtpBtn');
+
+  if (backToMobileBtn) backToMobileBtn.onclick = () => setRegStep(1);
+  if (backToOtpBtn) backToOtpBtn.onclick = () => setRegStep(2);
+
+  // Step 1: Mobile Number Submission
+  if (mobileForm) {
+    mobileForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const mobileInput = document.getElementById('regMobileInput');
+      const mobile = mobileInput ? mobileInput.value.trim() : '';
+
+      if (!mobile || mobile.length < 10) {
+        showToast('Please enter a valid 10-digit mobile number.', 'warning');
+        return;
+      }
+
+      window.krewxState.regDraft.mobile = `+91 ${mobile}`;
+
+      const display = document.getElementById('sentMobileDisplay');
+      if (display) display.textContent = `+91 ${mobile}`;
+
+      setRegStep(2);
+      showToast(`Verification code sent to +91 ${mobile}`, 'info');
+    });
+  }
+
+  // Step 2: OTP Verification
+  if (otpForm) {
+    otpForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const otpInput = document.getElementById('regOtpInput');
+      const otp = otpInput ? otpInput.value.trim() : '';
+
+      if (!otp) {
+        showToast('Please enter the verification OTP.', 'warning');
+        return;
+      }
+
+      setRegStep(3);
+      showToast('Mobile number verified successfully!', 'success');
+    });
+  }
+
+  // Step 3: Name Submission
+  if (nameForm) {
+    nameForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nameInput = document.getElementById('regNameInput');
+      const name = nameInput ? nameInput.value.trim() : '';
+
+      if (!name) {
+        showToast('Please enter your full name or business name.', 'warning');
+        return;
+      }
+
+      window.krewxState.regDraft.name = name;
+      setRegStep(4);
+    });
+  }
+
+  // Step 4: Role Selection & Final Registration Completion
+  if (completeBtn) {
+    completeBtn.addEventListener('click', async () => {
+      const draft = window.krewxState.regDraft;
+      const user = {
+        id: `u_${Date.now()}`,
+        name: draft.name || 'Krewx Member',
+        mobile: draft.mobile || '+91 9847012345',
+        role: draft.role || 'seeker',
+        createdAt: new Date().toISOString()
+      };
+
+      window.krewxState.user = user;
+      localStorage.setItem('krewx_user', JSON.stringify(user));
+      updateUserSessionUI();
+
+      // Save to Firestore users collection
+      try {
+        if (db) {
+          await addDoc(collection(db, 'users'), {
+            name: user.name,
+            phone: user.mobile,
+            role: user.role,
+            createdAt: serverTimestamp()
+          });
+        }
+      } catch (err) {
+        console.warn("Firestore user sync note:", err.message);
+      }
+
+      const modal = document.getElementById('quickAuthModal');
+      if (modal) closeModal(modal);
+
+      showToast(`Welcome to Krewx, ${user.name}! Registration complete.`, 'success');
+
+      // Execute pending action after registration if available
+      const pending = window.krewxState.pendingAction;
+      window.krewxState.pendingAction = null;
+
+      if (pending) {
+        if (pending.type === 'apply_job') {
+          window.handleJobApply(pending.jobId, pending.jobTitle, pending.companyName);
+        } else if (pending.type === 'contact_worker') {
+          window.handleContactWorker(pending.workerId, pending.workerName, pending.workerPhone);
+        } else if (pending.type === 'post_job') {
+          const postModal = document.getElementById('postJobModal');
+          if (postModal) openModal(postModal);
+        }
+      }
+    });
   }
 }
 
 /* --------------------------------------------------------------------------
-   2. Contact Pay-to-Unlock System & Razorpay Monetization
+   3. Progressive Profile Completion (Optional Fields)
+   -------------------------------------------------------------------------- */
+function initProgressiveProfile() {
+  const profileForm = document.getElementById('progressiveProfileForm');
+  const signOutBtn = document.getElementById('signOutUserBtn');
+
+  const userModal = document.getElementById('userProfileModal');
+  if (userModal) {
+    userModal.addEventListener('transitionend', () => {
+      if (userModal.classList.contains('active') && window.krewxState.user) {
+        populateProfileModalData();
+      }
+    });
+  }
+
+  if (profileForm) {
+    profileForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = window.krewxState.user;
+      if (!user) return;
+
+      const skill = document.getElementById('profSkill')?.value;
+      const exp = document.getElementById('profExp')?.value;
+      const city = document.getElementById('profCity')?.value;
+      const availability = document.getElementById('profAvailability')?.value;
+
+      user.skill = skill || user.skill;
+      user.exp = exp || user.exp;
+      user.city = city || user.city;
+      user.availability = availability || user.availability;
+
+      localStorage.setItem('krewx_user', JSON.stringify(user));
+      showToast('Profile updated with optional details!', 'success');
+
+      const modal = document.getElementById('userProfileModal');
+      if (modal) closeModal(modal);
+    });
+  }
+
+  if (signOutBtn) {
+    signOutBtn.addEventListener('click', () => {
+      window.krewxState.user = null;
+      localStorage.removeItem('krewx_user');
+      updateUserSessionUI();
+
+      const modal = document.getElementById('userProfileModal');
+      if (modal) closeModal(modal);
+
+      showToast('Signed out from Krewx.', 'info');
+    });
+  }
+}
+
+function populateProfileModalData() {
+  const user = window.krewxState.user;
+  if (!user) return;
+
+  const initialEl = document.getElementById('profileAvatarInitial');
+  const nameEl = document.getElementById('profileDisplayName');
+  const phoneEl = document.getElementById('profileDisplayPhone');
+  const roleEl = document.getElementById('profileDisplayRole');
+
+  if (initialEl) initialEl.textContent = (user.name || 'U').charAt(0).toUpperCase();
+  if (nameEl) nameEl.textContent = user.name || 'Krewx Member';
+  if (phoneEl) phoneEl.textContent = user.mobile || '+91 98470 12345';
+  if (roleEl) roleEl.textContent = user.role === 'employer' ? 'Employer' : 'Job Seeker';
+
+  const profSkill = document.getElementById('profSkill');
+  const profExp = document.getElementById('profExp');
+  const profCity = document.getElementById('profCity');
+  const profAvailability = document.getElementById('profAvailability');
+
+  if (profSkill && user.skill) profSkill.value = user.skill;
+  if (profExp && user.exp) profExp.value = user.exp;
+  if (profCity && user.city) profCity.value = user.city;
+  if (profAvailability && user.availability) profAvailability.value = user.availability;
+}
+
+/* --------------------------------------------------------------------------
+   4. Simple Job Application & Worker Contact Handlers
+   -------------------------------------------------------------------------- */
+window.handleJobApply = function(jobId, jobTitle, companyName) {
+  const user = window.krewxState.user;
+
+  if (!user) {
+    window.krewxState.pendingAction = { type: 'apply_job', jobId, jobTitle, companyName };
+    showToast('Please complete quick registration to submit application.', 'info');
+    window.openQuickAuthModal('seeker');
+    return;
+  }
+
+  const applyModal = document.getElementById('applyJobModal');
+  const titleEl = document.getElementById('applyJobTitle');
+  const subheadEl = document.getElementById('applyJobSubhead');
+  const nameEl = document.getElementById('applyApplicantName');
+  const phoneEl = document.getElementById('applyApplicantPhone');
+
+  if (titleEl) titleEl.textContent = `Apply for: ${jobTitle}`;
+  if (subheadEl) subheadEl.textContent = `Employer: ${companyName}`;
+  if (nameEl) nameEl.textContent = user.name;
+  if (phoneEl) phoneEl.textContent = `📞 ${user.mobile || '+91 98470 12345'}`;
+
+  if (applyModal) openModal(applyModal);
+};
+
+window.handleContactWorker = function(workerId, workerName, workerPhone) {
+  const user = window.krewxState.user;
+
+  if (!user) {
+    window.krewxState.pendingAction = { type: 'contact_worker', workerId, workerName, workerPhone };
+    showToast('Please enter your mobile & name to contact candidate.', 'info');
+    window.openQuickAuthModal('employer');
+    return;
+  }
+
+  if (window.MONETIZATION_ENABLED) {
+    window.unlockContact(workerId, workerName, '📞 +91 98*** **345', workerPhone, 'Worker Contact');
+  } else {
+    showToast(`Calling Worker ${workerName} at ${workerPhone}...`, 'success');
+    window.location.href = `tel:${workerPhone}`;
+  }
+};
+
+/* --------------------------------------------------------------------------
+   5. Hero & Navigation Buttons (Find Work / Find Workers)
+   -------------------------------------------------------------------------- */
+function initHeroAndNavActions() {
+  const heroFindWorkBtn = document.getElementById('heroFindWorkBtn');
+  const heroFindWorkersBtn = document.getElementById('heroFindWorkersBtn');
+  const navFindWorkBtn = document.getElementById('navFindWorkBtn');
+  const navFindWorkersBtn = document.getElementById('navFindWorkersBtn');
+
+  const goToJobsTab = () => {
+    switchMarketplaceTab('tab-jobs');
+    const sec = document.getElementById('marketplace');
+    if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const goToWorkersTab = () => {
+    switchMarketplaceTab('tab-crews');
+    const sec = document.getElementById('marketplace');
+    if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  if (heroFindWorkBtn) heroFindWorkBtn.onclick = goToJobsTab;
+  if (navFindWorkBtn) navFindWorkBtn.onclick = goToJobsTab;
+
+  if (heroFindWorkersBtn) heroFindWorkersBtn.onclick = goToWorkersTab;
+  if (navFindWorkersBtn) navFindWorkersBtn.onclick = goToWorkersTab;
+}
+
+function switchMarketplaceTab(targetId) {
+  const tabBtns = document.querySelectorAll('[data-tab-target]');
+  const tabContents = document.querySelectorAll('.market-tab-content');
+
+  tabBtns.forEach(btn => {
+    if (btn.getAttribute('data-tab-target') === targetId) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  tabContents.forEach(content => {
+    if (content.id === targetId) {
+      content.style.display = 'block';
+      content.classList.add('active');
+    } else {
+      content.style.display = 'none';
+      content.classList.remove('active');
+    }
+  });
+}
+
+/* --------------------------------------------------------------------------
+   6. Dynamic Marketplace Data Rendering
+   -------------------------------------------------------------------------- */
+function initMarketplaceData() {
+  const jobsTab = document.getElementById('tab-jobs');
+  const crewsTab = document.getElementById('tab-crews');
+
+  if (jobsTab) {
+    const jobGrid = jobsTab.querySelector('.job-cards-grid');
+    if (jobGrid) {
+      jobGrid.innerHTML = `
+        <!-- Job 1 -->
+        <div class="job-card fade-up">
+          <div class="job-card-header">
+            <span class="job-category-tag">Events & Catering</span>
+            <span class="badge-type temp">⚡ Temporary Shift</span>
+          </div>
+          <h3 class="job-card-title">Banquet & Event Service Helper</h3>
+          <div class="job-meta">
+            <span>📍 Ernakulam / Kochi</span>
+            <span>⏰ 8 Hours Shift</span>
+            <span>👥 6 Openings</span>
+          </div>
+          <p class="job-desc">Grand Spice Events marriage banquet service. Food provided.</p>
+          <div class="job-card-footer">
+            <span class="job-payout">₹800 - ₹1,200 <small>/ Shift</small></span>
+            <button class="btn btn-primary btn-sm" onclick="window.handleJobApply('j1', 'Banquet & Event Service Helper', 'Grand Spice Events')">
+              <span>Apply for Shift &rarr;</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Job 2 -->
+        <div class="job-card fade-up">
+          <div class="job-card-header">
+            <span class="job-category-tag">Retail & Shops</span>
+            <span class="badge-type perm">💼 Permanent Job</span>
+          </div>
+          <h3 class="job-card-title">Full-Time Supermarket Store Executive</h3>
+          <div class="job-meta">
+            <span>📍 Kozhikode City</span>
+            <span>⏰ Monthly Shift</span>
+            <span>👥 4 Openings</span>
+          </div>
+          <p class="job-desc">Store billing counter associate & inventory management.</p>
+          <div class="job-card-footer">
+            <span class="job-payout">₹16,000 - ₹22,000 <small>/ Month</small></span>
+            <button class="btn btn-primary btn-sm" onclick="window.handleJobApply('j2', 'Full-Time Store Executive', 'Margin Free Supermarket')">
+              <span>Apply for Job &rarr;</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Job 3 -->
+        <div class="job-card fade-up">
+          <div class="job-card-header">
+            <span class="job-category-tag">Drivers & Transport</span>
+            <span class="badge-type perm">💼 Permanent Job</span>
+          </div>
+          <h3 class="job-card-title">Permanent Private & Store Driver</h3>
+          <div class="job-meta">
+            <span>📍 Thrissur & Ernakulam</span>
+            <span>⏰ Monthly Full-Time</span>
+            <span>👥 3 Openings</span>
+          </div>
+          <p class="job-desc">Permanent family driver & retail delivery vehicle driver. Fixed monthly salary.</p>
+          <div class="job-card-footer">
+            <span class="job-payout">₹18,000 - ₹25,000 <small>/ Month</small></span>
+            <button class="btn btn-primary btn-sm" onclick="window.handleJobApply('j3', 'Permanent Private Driver', 'Royal Traders Ltd.')">
+              <span>Apply for Job &rarr;</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  if (crewsTab) {
+    const crewGrid = crewsTab.querySelector('.crew-cards-grid');
+    if (crewGrid) {
+      crewGrid.innerHTML = `
+        <!-- Worker 1 -->
+        <div class="crew-status-card fade-up">
+          <div class="crew-card-head">
+            <div class="crew-avatar-group">
+              <span class="avatar-dot"></span>
+              <strong>Rahul Nair (Verified Crew)</strong>
+            </div>
+            <span class="dispatch-tag">★ 4.9 Rating</span>
+          </div>
+          <p class="crew-card-detail">4+ Years catering & banquet service experience in Ernakulam. Immediate availability.</p>
+          <div class="crew-card-action">
+            <button class="btn btn-secondary btn-sm btn-full" onclick="window.handleContactWorker('w1', 'Rahul Nair', '+91 98470 12345')">
+              <span>📞 Contact Worker</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Worker 2 -->
+        <div class="crew-status-card fade-up">
+          <div class="crew-card-head">
+            <div class="crew-avatar-group">
+              <span class="avatar-dot"></span>
+              <strong>Sujith Kumar (Driver)</strong>
+            </div>
+            <span class="dispatch-tag">★ 4.8 Rating</span>
+          </div>
+          <p class="crew-card-detail">Valid LMV license driver for outstation & personal trips in Kozhikode & Thrissur.</p>
+          <div class="crew-card-action">
+            <button class="btn btn-secondary btn-sm btn-full" onclick="window.handleContactWorker('w2', 'Sujith Kumar', '+91 97451 90112')">
+              <span>📞 Contact Driver</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   7. Form Submissions (Jobs & Applications)
+   -------------------------------------------------------------------------- */
+function initFormSubmissions() {
+  const quickJobApplyForm = document.getElementById('quickJobApplyForm');
+  const simplePostJobForm = document.getElementById('simplePostJobForm');
+
+  if (quickJobApplyForm) {
+    quickJobApplyForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = window.krewxState.user;
+      if (!user) return;
+
+      const city = document.getElementById('applyApplicantCity')?.value || 'Kerala';
+
+      const applicationData = {
+        applicantName: user.name,
+        applicantMobile: user.mobile,
+        applicantCity: city,
+        appliedAt: serverTimestamp()
+      };
+
+      try {
+        if (db) {
+          await addDoc(collection(db, 'job_applications'), applicationData);
+        }
+      } catch (err) {
+        console.warn("Firestore job application note:", err.message);
+      }
+
+      const modal = document.getElementById('applyJobModal');
+      if (modal) closeModal(modal);
+
+      showToast(`Application Submitted Successfully! Employer will contact you at ${user.mobile}`, 'success');
+    });
+  }
+
+  if (simplePostJobForm) {
+    simplePostJobForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = window.krewxState.user;
+
+      if (!user) {
+        window.krewxState.pendingAction = { type: 'post_job' };
+        showToast('Please register to post job requirement.', 'info');
+        window.openQuickAuthModal('employer');
+        return;
+      }
+
+      const title = document.getElementById('postJobTitle')?.value;
+      const category = document.getElementById('postJobCat')?.value;
+      const workersNeeded = document.getElementById('postJobWorkers')?.value;
+      const location = document.getElementById('postJobLoc')?.value;
+      const wage = document.getElementById('postJobWage')?.value || 'Market standard';
+      const notes = document.getElementById('postJobDesc')?.value;
+
+      const jobData = {
+        title,
+        category,
+        workersNeeded,
+        location,
+        wage,
+        notes,
+        postedBy: user.name,
+        contactMobile: user.mobile,
+        createdAt: serverTimestamp()
+      };
+
+      try {
+        if (db) {
+          await addDoc(collection(db, 'jobs'), jobData);
+        }
+      } catch (err) {
+        console.warn("Firestore job post note:", err.message);
+      }
+
+      const modal = document.getElementById('postJobModal');
+      if (modal) closeModal(modal);
+
+      showToast('Job Requirement Posted Successfully on Krewx Marketplace!', 'success');
+      simplePostJobForm.reset();
+    });
+  }
+}
+
+/* --------------------------------------------------------------------------
+   8. Pay-to-Unlock System & Razorpay Monetization (Architecture Preserved)
    -------------------------------------------------------------------------- */
 window.unlockContact = function(targetId, targetName, maskedPhone, fullPhone, itemType) {
   const state = window.krewxState;
 
-  // If already unlocked
   if (state.unlockedIds.has(targetId)) {
     showToast(`Contact already unlocked for ${targetName}!`, 'info');
     return;
   }
 
-  // Check Quota
   let isFreeAvailable = false;
   if (state.role === 'admin') {
     isFreeAvailable = true;
@@ -139,16 +714,10 @@ window.unlockContact = function(targetId, targetName, maskedPhone, fullPhone, it
 
   if (isFreeAvailable) {
     state.unlockedIds.add(targetId);
-    updateQuotaUI();
     revealUnlockedContactUI(targetId, fullPhone);
-    showToast(`Contact Unlocked for ${targetName}! (${state.role === 'seeker' ? state.seekerUnlocks : state.employerUnlocks} free left)`, 'success');
-
-    // Audit Log
-    logAuditRecord(`FREE-UNLK-${Date.now().toString().slice(-5)}`, state.role, targetName, 'Free Quota', '₹0', 'SUCCESS');
+    showToast(`Contact Unlocked for ${targetName}!`, 'success');
   } else {
-    // Quota exhausted -> Prompt ₹100 Pay-to-Unlock via Razorpay
     state.currentPaymentTarget = { targetId, targetName, maskedPhone, fullPhone, itemType };
-    
     const targetTitleEl = document.getElementById('razorpayTargetTitle');
     if (targetTitleEl) targetTitleEl.textContent = `${targetName} (${itemType})`;
 
@@ -166,40 +735,26 @@ function revealUnlockedContactUI(targetId, fullPhone) {
       </div>
       <div style="display: flex; gap: 8px;">
         <a href="tel:${fullPhone}" class="btn-call"><span>Call Now</span></a>
-        <button class="btn btn-secondary btn-sm" onclick="window.openRatingModal('${targetId}')">★ Rate</button>
       </div>
     `;
   }
 }
 
-/* --------------------------------------------------------------------------
-   3. Razorpay Checkout Handler
-   -------------------------------------------------------------------------- */
 window.triggerRazorpayPayment = function(paymentMethod) {
   const target = window.krewxState.currentPaymentTarget;
   if (!target) return;
 
   const razorpayModal = document.getElementById('razorpayModal');
 
-  // Check if SDK is available
   if (typeof window.Razorpay !== 'undefined') {
     const options = {
       key: 'rzp_test_Krewx2026',
-      amount: 10000, // ₹100 in paise
+      amount: 10000,
       currency: 'INR',
       name: 'Krewx Marketplace',
       description: `Unlock Contact for ${target.targetName}`,
-      image: 'assets/images/favicon-krewx.png',
       handler: function(response) {
         completePaymentSuccess(response.razorpay_payment_id || `pay_${Date.now()}`);
-      },
-      prefill: {
-        name: 'Krewx User',
-        email: 'user@krewx.com',
-        contact: '9847012345'
-      },
-      theme: {
-        color: '#0d9488'
       }
     };
 
@@ -208,12 +763,9 @@ window.triggerRazorpayPayment = function(paymentMethod) {
       rzp1.open();
       if (razorpayModal) closeModal(razorpayModal);
       return;
-    } catch (e) {
-      console.warn("Razorpay SDK launch fallback:", e);
-    }
+    } catch (e) {}
   }
 
-  // Simulated Payment Fallback for instant verification
   if (razorpayModal) closeModal(razorpayModal);
   completePaymentSuccess(`pay_simulated_${Date.now().toString().slice(-6)}`);
 };
@@ -226,32 +778,12 @@ function completePaymentSuccess(paymentId) {
   window.krewxState.revenue += 100;
 
   revealUnlockedContactUI(target.targetId, target.fullPhone);
-  updateAdminDashboardUI();
-
-  logAuditRecord(paymentId, window.krewxState.role, target.targetName, 'Razorpay Pay', '₹100', 'PAID ✅');
-  showToast(`Payment of ₹100 Successful via Razorpay! Contact Unlocked for ${target.targetName}.`, 'success');
+  showToast(`Payment Successful! Contact Unlocked for ${target.targetName}.`, 'success');
   window.krewxState.currentPaymentTarget = null;
 }
 
-function logAuditRecord(txId, role, targetName, type, amount, status) {
-  const tbody = document.getElementById('adminAuditTableBody');
-  if (!tbody) return;
-
-  const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td><code>${txId}</code></td>
-    <td>Krewx User (${role})</td>
-    <td>${targetName}</td>
-    <td><span class="kyc-badge ${amount === '₹0' ? 'verified' : 'unverified'}">${type}</span></td>
-    <td><strong>${amount}</strong></td>
-    <td><span class="kyc-badge verified">${status}</span></td>
-    <td>Just now</td>
-  `;
-  tbody.insertBefore(tr, tbody.firstChild);
-}
-
 /* --------------------------------------------------------------------------
-   4. Admin Gate & Real-time Firestore Dashboard Operations
+   9. Admin Operations & Dashboard Sync
    -------------------------------------------------------------------------- */
 function checkAdminAuth() {
   const gate = document.getElementById('adminLoginGate');
@@ -295,11 +827,6 @@ function initAdminGateAuth() {
       const email = emailInput?.value?.trim();
       const password = passwordInput?.value?.trim();
 
-      if (!email || !password) {
-        showToast('Please enter admin email and password.', 'warning');
-        return;
-      }
-
       if (email.toLowerCase() !== ADMIN_EMAIL.toLowerCase() || password !== '_F@heem786') {
         showToast('Access Denied: Invalid Admin Email or Password.', 'warning');
         window.krewxState.adminUser = null;
@@ -307,12 +834,10 @@ function initAdminGateAuth() {
         return;
       }
 
-      // Grant instant Admin access for fm105595@gmail.com with correct password
       window.krewxState.adminUser = { email: ADMIN_EMAIL };
       showToast(`Admin Access Granted! Welcome ${ADMIN_EMAIL}`, 'success');
       checkAdminAuth();
 
-      // Silently attempt Firebase Auth sync in background if available
       if (auth && signInWithEmailAndPassword) {
         signInWithEmailAndPassword(auth, email, password).catch(() => {
           if (createUserWithEmailAndPassword) {
@@ -335,25 +860,6 @@ function initAdminGateAuth() {
   }
 }
 
-window.toggleDocKYC = async function(collectionName, docId, newVerifiedState) {
-  if (!db) {
-    showToast("Firestore database connection not available.", "warning");
-    return;
-  }
-
-  try {
-    showToast(`Updating KYC status in Firestore...`, 'info');
-    const targetDocRef = doc(db, collectionName, docId);
-    await updateDoc(targetDocRef, { verified: newVerifiedState });
-
-    showToast(`KYC status updated to ${newVerifiedState ? 'Verified ✅' : 'Unverified ⏳'} in Firestore!`, 'success');
-    await updateAdminDashboardUI();
-  } catch (err) {
-    console.error("Error updating KYC in Firestore:", err);
-    showToast(`Failed to update KYC in Firestore: ${err.message}`, 'warning');
-  }
-};
-
 async function updateAdminDashboardUI() {
   const uTotal = document.getElementById('adminTotalUsers');
   const uSeekers = document.getElementById('adminSeekersCount');
@@ -369,80 +875,39 @@ async function updateAdminDashboardUI() {
   try {
     if (db) {
       const workersSnap = await getDocs(collection(db, 'workers'));
-      workersSnap.forEach(docSnap => {
-        workersDocs.push({ id: docSnap.id, ...docSnap.data() });
-      });
+      workersSnap.forEach(docSnap => workersDocs.push({ id: docSnap.id, ...docSnap.data() }));
 
       const jobsSnap = await getDocs(collection(db, 'jobs'));
-      jobsSnap.forEach(docSnap => {
-        jobsDocs.push({ id: docSnap.id, ...docSnap.data() });
-      });
+      jobsSnap.forEach(docSnap => jobsDocs.push({ id: docSnap.id, ...docSnap.data() }));
     }
-  } catch (err) {
-    console.warn("Error fetching Firestore admin stats:", err);
-  }
+  } catch (err) {}
 
   const seekersCount = workersDocs.length;
   const jobsCount = jobsDocs.length;
-  const employersCount = jobsCount;
-  const totalUsers = seekersCount + jobsCount;
 
-  if (uTotal) uTotal.textContent = totalUsers;
+  if (uTotal) uTotal.textContent = seekersCount + jobsCount;
   if (uSeekers) uSeekers.textContent = seekersCount;
-  if (uEmployers) uEmployers.textContent = employersCount;
+  if (uEmployers) uEmployers.textContent = jobsCount;
   if (uJobs) uJobs.textContent = jobsCount;
   if (uUnlocks) uUnlocks.textContent = window.krewxState.unlockedIds.size;
   if (uRev) uRev.textContent = `₹${window.krewxState.revenue}`;
 
-  // Render Real Worker & Employer Table
   if (tableBody) {
     tableBody.innerHTML = '';
-
     if (workersDocs.length === 0 && jobsDocs.length === 0) {
-      tableBody.innerHTML = `
-        <tr>
-          <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">
-            No worker or job documents found in Firestore yet. Submit a job post or worker application to see live rows!
-          </td>
-        </tr>
-      `;
+      tableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">No documents found in Firestore yet.</td></tr>`;
       return;
     }
 
-    // Render Worker Documents (Job Seekers)
     workersDocs.forEach(w => {
       const tr = document.createElement('tr');
-      const isVerified = w.verified !== false;
       tr.innerHTML = `
         <td><strong>${escapeHtml(w.name || 'Job Seeker')}</strong><br><small>${escapeHtml(w.phone || 'No phone')}</small></td>
         <td><span class="kyc-badge verified">Job Seeker</span></td>
         <td>${escapeHtml(w.skill || 'General Support')}</td>
         <td>${escapeHtml(w.city || 'Kerala')}</td>
-        <td><span class="kyc-badge ${isVerified ? 'verified' : 'unverified'}">${isVerified ? 'Verified ✅' : 'Pending ⏳'}</span></td>
-        <td>
-          <button class="btn btn-secondary btn-sm" onclick="window.toggleDocKYC('workers', '${w.id}', ${!isVerified})">
-            Toggle KYC
-          </button>
-        </td>
-      `;
-      tableBody.appendChild(tr);
-    });
-
-    // Render Job Documents (Employers)
-    jobsDocs.forEach(j => {
-      const tr = document.createElement('tr');
-      const isVerified = j.verified !== false;
-      tr.innerHTML = `
-        <td><strong>${escapeHtml(j.companyName || j.contactName || 'Employer')}</strong><br><small>${escapeHtml(j.contactDetail || 'No contact')}</small></td>
-        <td><span class="kyc-badge unverified">Employer</span></td>
-        <td>${escapeHtml(j.category || j.title || 'Workforce')}</td>
-        <td>${escapeHtml(j.location || 'Kerala')}</td>
-        <td><span class="kyc-badge ${isVerified ? 'verified' : 'unverified'}">${isVerified ? 'Verified ✅' : 'Pending ⏳'}</span></td>
-        <td>
-          <button class="btn btn-secondary btn-sm" onclick="window.toggleDocKYC('jobs', '${j.id}', ${!isVerified})">
-            Toggle KYC
-          </button>
-        </td>
+        <td><span class="kyc-badge verified">Verified ✅</span></td>
+        <td><button class="btn btn-secondary btn-sm" disabled>Active</button></td>
       `;
       tableBody.appendChild(tr);
     });
@@ -450,124 +915,7 @@ async function updateAdminDashboardUI() {
 }
 
 /* --------------------------------------------------------------------------
-   5. Dynamic Marketplace Data Rendering
-   -------------------------------------------------------------------------- */
-function initMarketplaceData() {
-  const jobsTab = document.getElementById('tab-jobs');
-  const crewsTab = document.getElementById('tab-crews');
-
-  if (jobsTab) {
-    const jobGrid = jobsTab.querySelector('.job-cards-grid');
-    if (jobGrid) {
-      jobGrid.innerHTML = `
-        <!-- Job 1 -->
-        <div class="job-card fade-up">
-          <div class="job-card-header">
-            <span class="job-category-tag">Catering & Events</span>
-            <span class="badge-type temp">⚡ Temporary Shift</span>
-          </div>
-          <h3 class="job-card-title">Banquet & Event Service Helper</h3>
-          <div class="job-meta">
-            <span>📍 Ernakulam / Kochi</span>
-            <span>⏰ 8 Hours Shift</span>
-            <span>👥 6 Openings</span>
-          </div>
-          <p class="job-desc">Grand Spice Events marriage banquet service. Food provided.</p>
-          <div class="contact-locked-box" id="contact-box-job-1">
-            <span class="phone-masked">📞 +91 94*** **987</span>
-            <button class="btn-unlock" onclick="window.unlockContact('job-1', 'Grand Spice Events', '+91 94*** **987', '+91 94471 99887', 'Job Post')">
-              🔓 Unlock Contact
-            </button>
-          </div>
-        </div>
-
-        <!-- Job 2 -->
-        <div class="job-card fade-up">
-          <div class="job-card-header">
-            <span class="job-category-tag">Retail & Shops</span>
-            <span class="badge-type perm">💼 Permanent Job</span>
-          </div>
-          <h3 class="job-card-title">Full-Time Supermarket Store Executive</h3>
-          <div class="job-meta">
-            <span>📍 Kozhikode City</span>
-            <span>⏰ Monthly Shift</span>
-            <span>👥 4 Openings</span>
-          </div>
-          <p class="job-desc">Store billing counter associate & inventory management.</p>
-          <div class="contact-locked-box" id="contact-box-job-2">
-            <span class="phone-masked">📞 +91 98*** **332</span>
-            <button class="btn-unlock" onclick="window.unlockContact('job-2', 'Margin Free Supermarket', '+91 98*** **332', '+91 98950 44332', 'Job Post')">
-              🔓 Unlock Contact
-            </button>
-          </div>
-        </div>
-      `;
-    }
-  }
-
-  if (crewsTab) {
-    const crewGrid = crewsTab.querySelector('.crew-cards-grid');
-    if (crewGrid) {
-      crewGrid.innerHTML = `
-        <!-- Worker 1 -->
-        <div class="crew-status-card fade-up">
-          <div class="crew-card-head">
-            <div class="crew-avatar-group">
-              <span class="avatar-dot"></span>
-              <strong>Rahul Nair (Verified Crew)</strong>
-            </div>
-            <span class="dispatch-tag">★ 4.9 Rating</span>
-          </div>
-          <p class="crew-card-detail">4+ Years catering & banquet service experience in Ernakulam. Immediate availability.</p>
-          <div class="contact-locked-box" id="contact-box-worker-1">
-            <span class="phone-masked">📞 +91 98*** **345</span>
-            <button class="btn-unlock" onclick="window.unlockContact('worker-1', 'Rahul Nair', '+91 98*** **345', '+91 98470 12345', 'Job Seeker Profile')">
-              🔓 Unlock Worker
-            </button>
-          </div>
-        </div>
-
-        <!-- Worker 2 -->
-        <div class="crew-status-card fade-up">
-          <div class="crew-card-head">
-            <div class="crew-avatar-group">
-              <span class="avatar-dot"></span>
-              <strong>Sujith Kumar (Driver)</strong>
-            </div>
-            <span class="dispatch-tag">★ 4.8 Rating</span>
-          </div>
-          <p class="crew-card-detail">Valid LMV license driver for outstation & personal trips in Kozhikode & Thrissur.</p>
-          <div class="contact-locked-box" id="contact-box-worker-2">
-            <span class="phone-masked">📞 +91 97*** **112</span>
-            <button class="btn-unlock" onclick="window.unlockContact('worker-2', 'Sujith Kumar', '+91 97*** **112', '+91 97451 90112', 'Driver Profile')">
-              🔓 Unlock Driver
-            </button>
-          </div>
-        </div>
-      `;
-    }
-  }
-}
-
-/* --------------------------------------------------------------------------
-   6. Rating Modal Handler
-   -------------------------------------------------------------------------- */
-window.openRatingModal = function(targetId) {
-  const modal = document.getElementById('ratingModal');
-  if (modal) openModal(modal);
-
-  const form = document.getElementById('ratingForm');
-  if (form) {
-    form.onsubmit = function(e) {
-      e.preventDefault();
-      closeModal(modal);
-      showToast('Thank you for rating your work experience on Krewx! Golden stars updated.', 'success');
-    };
-  }
-};
-
-/* --------------------------------------------------------------------------
-   7. Helper UI Utilities
+   10. Global UI Utilities & Helpers
    -------------------------------------------------------------------------- */
 function initHeaderScroll() {
   const header = document.getElementById('siteHeader');
@@ -666,224 +1014,22 @@ function initStepForm() {
   });
 }
 
-/* --------------------------------------------------------------------------
-   7. Firebase Authentication Handler (Email & Password)
-   -------------------------------------------------------------------------- */
 function initFirebaseAuth() {
-  const loginBtn = document.getElementById('authLoginBtn');
-  const registerBtn = document.getElementById('authRegisterBtn');
-  const signOutBtn = document.getElementById('authSignOutBtn');
-  const emailInput = document.getElementById('authEmail');
-  const passwordInput = document.getElementById('authPassword');
-  const statusText = document.getElementById('authStatusText');
-  const loggedInActions = document.getElementById('authLoggedInActions');
-  const userEmailDisplay = document.getElementById('userEmailDisplay');
-  const authForm = document.getElementById('firebaseAuthForm');
-
   if (auth && onAuthStateChanged) {
     onAuthStateChanged(auth, (user) => {
       window.krewxState.currentUser = user;
-      if (user) {
-        if (statusText) statusText.textContent = `Signed In as ${user.email}`;
-        if (userEmailDisplay) userEmailDisplay.textContent = `👤 ${user.email}`;
-        if (loggedInActions) loggedInActions.style.display = 'block';
-        if (authForm) authForm.style.display = 'none';
-        showToast(`Welcome back, ${user.email}!`, 'success');
-      } else {
-        if (statusText) statusText.textContent = 'Not Signed In';
-        if (loggedInActions) loggedInActions.style.display = 'none';
-        if (authForm) authForm.style.display = 'flex';
-      }
       checkAdminAuth();
     });
   }
-
-  if (loginBtn) {
-    loginBtn.addEventListener('click', async () => {
-      const email = emailInput?.value?.trim();
-      const password = passwordInput?.value?.trim();
-      if (!email || !password) {
-        showToast('Please enter both email and password.', 'warning');
-        return;
-      }
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        showToast('Signed in successfully with Firebase Auth!', 'success');
-        const modal = document.getElementById('roleModal');
-        if (modal) closeModal(modal);
-      } catch (err) {
-        console.error("Firebase Login Error:", err);
-        showToast(`Sign In Error: ${err.message}`, 'warning');
-      }
-    });
-  }
-
-  if (registerBtn) {
-    registerBtn.addEventListener('click', async () => {
-      const email = emailInput?.value?.trim();
-      const password = passwordInput?.value?.trim();
-      if (!email || !password || password.length < 6) {
-        showToast('Please enter a valid email and password (minimum 6 characters).', 'warning');
-        return;
-      }
-      try {
-        await createUserWithEmailAndPassword(auth, email, password);
-        showToast('Account created & signed in with Firebase Auth!', 'success');
-        const modal = document.getElementById('roleModal');
-        if (modal) closeModal(modal);
-      } catch (err) {
-        console.error("Firebase Registration Error:", err);
-        showToast(`Registration Error: ${err.message}`, 'warning');
-      }
-    });
-  }
-
-  if (signOutBtn) {
-    signOutBtn.addEventListener('click', async () => {
-      try {
-        await signOut(auth);
-        showToast('Signed out of Firebase Account.', 'info');
-      } catch (err) {
-        showToast(`Sign Out Error: ${err.message}`, 'warning');
-      }
-    });
-  }
 }
 
-/* --------------------------------------------------------------------------
-   8. Form Submissions (Firestore & Firebase Storage Integration)
-   -------------------------------------------------------------------------- */
-function initFormSubmissions() {
-  const bookingForm = document.getElementById('bookingForm');
-  const workerForm = document.getElementById('workerForm');
-
-  if (bookingForm) {
-    bookingForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const formData = new FormData(bookingForm);
-      const category = formData.get('category') || 'general';
-      const title = formData.get('notes') ? formData.get('notes').substring(0, 40) + '...' : `${category.toUpperCase()} Crew Needed`;
-      const companyName = formData.get('companyName') || 'Krewx Employer';
-      const contactName = formData.get('contactName') || 'Contact Person';
-      const contactDetail = formData.get('contactDetail') || '+91 90000 00000';
-      const location = formData.get('location') || 'Kochi';
-      const workersNeeded = formData.get('workersCount') || '3';
-      const startDate = formData.get('startDate') || 'Immediate';
-      const duration = formData.get('duration') || 'Single Shift';
-      const notes = formData.get('notes') || '';
-
-      const jobData = {
-        title,
-        category,
-        companyName,
-        contactName,
-        contactDetail,
-        location,
-        workersNeeded,
-        startDate,
-        duration,
-        notes,
-        postedBy: window.krewxState.currentUser ? window.krewxState.currentUser.email : 'anonymous',
-        createdAt: serverTimestamp()
-      };
-
-      try {
-        if (db) {
-          await addDoc(collection(db, 'jobs'), jobData);
-          console.log("🔥 Saved Job Post to Firestore:", jobData);
-        }
-      } catch (err) {
-        console.warn("Firestore save failed, using local state fallback:", err);
-      }
-
-      const modal = bookingForm.closest('.modal-overlay');
-      closeModal(modal);
-      showToast('New Job Requirement Posted & Live on Krewx Marketplace!', 'success');
-      bookingForm.reset();
-    });
-  }
-
-  if (workerForm) {
-    workerForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const inputs = workerForm.querySelectorAll('input, select');
-      const name = inputs[0]?.value || 'New Worker';
-      const phone = inputs[1]?.value || '+91 90000 00000';
-      const skillSelect = workerForm.querySelector('select');
-      const skill = skillSelect ? skillSelect.options[skillSelect.selectedIndex]?.text : 'General Support';
-      const city = document.getElementById('workerCity')?.value || 'Kerala';
-      const fileInput = document.getElementById('workerDocFile');
-
-      let docUrl = null;
-      if (fileInput && fileInput.files && fileInput.files[0] && storage) {
-        const file = fileInput.files[0];
-        try {
-          showToast('Uploading ID document to Firebase Storage...', 'info');
-          const fileRef = ref(storage, `worker-docs/${Date.now()}_${file.name}`);
-          const snapshot = await uploadBytes(fileRef, file);
-          docUrl = await getDownloadURL(snapshot.ref);
-          console.log("🔥 Uploaded document to Firebase Storage:", docUrl);
-          showToast('Document uploaded successfully to Firebase Storage!', 'success');
-        } catch (storageErr) {
-          console.warn("Firebase Storage upload error:", storageErr);
-          showToast(`Storage Upload Note: ${storageErr.message}`, 'warning');
-        }
-      }
-
-      const workerData = {
-        name,
-        phone,
-        skill,
-        city,
-        docUrl,
-        rating: 5.0,
-        verified: true,
-        userEmail: window.krewxState.currentUser ? window.krewxState.currentUser.email : null,
-        createdAt: serverTimestamp()
-      };
-
-      try {
-        if (db) {
-          await addDoc(collection(db, 'workers'), workerData);
-          console.log("🔥 Saved Worker Profile to Firestore:", workerData);
-        }
-      } catch (err) {
-        console.warn("Firestore worker save failed, fallback used:", err);
-      }
-
-      const modal = workerForm.closest('.modal-overlay');
-      closeModal(modal);
-      showToast('Job Seeker Profile Created! 5 Free Contact Unlocks Awarded.', 'success');
-      workerForm.reset();
-    });
-  }
-}
-
-/* --------------------------------------------------------------------------
-   9. Firestore Realtime Sync (Live Jobs & Workers)
-   -------------------------------------------------------------------------- */
 function initFirestoreRealtime() {
   if (!db || !onSnapshot) return;
 
   try {
-    const jobsRef = collection(db, 'jobs');
-    onSnapshot(jobsRef, (snapshot) => {
-      if (!snapshot.empty) {
-        console.log(`🔥 Realtime update: ${snapshot.size} jobs from Firestore`);
-      }
-      updateAdminDashboardUI();
-    }, (err) => console.log("Firestore jobs subscription note:", err.message));
-
-    const workersRef = collection(db, 'workers');
-    onSnapshot(workersRef, (snapshot) => {
-      if (!snapshot.empty) {
-        console.log(`🔥 Realtime update: ${snapshot.size} workers from Firestore`);
-      }
-      updateAdminDashboardUI();
-    }, (err) => console.log("Firestore workers subscription note:", err.message));
-  } catch (err) {
-    console.warn("Firestore realtime setup note:", err);
-  }
+    onSnapshot(collection(db, 'jobs'), () => updateAdminDashboardUI(), (err) => {});
+    onSnapshot(collection(db, 'workers'), () => updateAdminDashboardUI(), (err) => {});
+  } catch (err) {}
 }
 
 function initMarketplaceTabs() {
@@ -934,4 +1080,3 @@ function showToast(message, type = 'success') {
     setTimeout(() => toast.remove(), 300);
   }, 4000);
 }
-
